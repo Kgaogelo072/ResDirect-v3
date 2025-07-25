@@ -6,6 +6,7 @@ using PropertyListingAPI.Data;
 using PropertyListingAPI.DTOs;
 using PropertyListingAPI.Models;
 using System.Security.Claims;
+using PropertyListingAPI.Interfaces;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -13,11 +14,13 @@ public class PropertiesController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly IPhotoService _photoService;
 
-    public PropertiesController(ApplicationDbContext context, IMapper mapper)
+    public PropertiesController(ApplicationDbContext context, IMapper mapper, IPhotoService photoService)
     {
         _context = context;
         _mapper = mapper;
+        _photoService = photoService;
     }
 
     [HttpGet]
@@ -38,12 +41,18 @@ public class PropertiesController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Agent")]
-    public async Task<IActionResult> Create(PropertyCreateDto dto)
+    public async Task<IActionResult> Create([FromForm] PropertyCreateDto dto)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
         var property = _mapper.Map<Property>(dto);
         property.AgentId = userId;
+
+        if (dto.Image != null)
+        {
+            var uploadResult = await _photoService.UploadImageAsync(dto.Image);
+            property.ImageUrl = uploadResult.Url;
+            property.ImagePublicId = uploadResult.PublicId;
+        }
 
         _context.Properties.Add(property);
         await _context.SaveChangesAsync();
@@ -53,7 +62,7 @@ public class PropertiesController : ControllerBase
 
     [HttpPut("{id}")]
     [Authorize(Roles = "Agent")]
-    public async Task<IActionResult> Update(int id, PropertyCreateDto dto)
+    public async Task<IActionResult> Update(int id, [FromForm] PropertyCreateDto dto)
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
@@ -61,6 +70,20 @@ public class PropertiesController : ControllerBase
         if (property == null) return NotFound();
         if (property.AgentId != userId) return Forbid();
 
+        // Delete old image if new one is uploaded
+        if (dto.Image != null)
+        {
+            if (!string.IsNullOrWhiteSpace(property.ImagePublicId))
+            {
+                await _photoService.DeleteImageAsync(property.ImagePublicId);
+            }
+
+            var uploadResult = await _photoService.UploadImageAsync(dto.Image);
+            property.ImageUrl = uploadResult.Url;
+            property.ImagePublicId = uploadResult.PublicId;
+        }
+
+        // Update other fields
         _mapper.Map(dto, property);
         await _context.SaveChangesAsync();
 
@@ -76,6 +99,12 @@ public class PropertiesController : ControllerBase
         var property = await _context.Properties.FindAsync(id);
         if (property == null) return NotFound();
         if (property.AgentId != userId) return Forbid();
+
+        // Delete image from Cloudinary
+        if (!string.IsNullOrWhiteSpace(property.ImagePublicId))
+        {
+            await _photoService.DeleteImageAsync(property.ImagePublicId);
+        }
 
         _context.Properties.Remove(property);
         await _context.SaveChangesAsync();

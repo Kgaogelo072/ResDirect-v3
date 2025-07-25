@@ -12,7 +12,7 @@ public class Property
     public int Bedrooms { get; set; }
     public int Bathrooms { get; set; }
     public required string ImageUrl { get; set; }
-
+    public required string ImagePublicId { get; set; }
     public int AgentId { get; set; }
     public User? Agent { get; set; }
 }

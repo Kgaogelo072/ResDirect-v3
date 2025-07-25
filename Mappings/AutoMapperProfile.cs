@@ -8,13 +8,14 @@ public class AutoMapperProfile : Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<PropertyCreateDto, Property>();
+        CreateMap<PropertyCreateDto, Property>()
+            .ForMember(dest => dest.ImageUrl, opt => opt.Ignore());
         CreateMap<Property, PropertyReadDto>()
             .ForMember(dest => dest.AgentName, opt => opt.MapFrom(src => src.Agent.FullName));
 
         CreateMap<ViewingRequest, ViewingRequestReadDto>()
-        .ForMember(dest => dest.PropertyTitle, opt => opt.MapFrom(src => src.Property.Title))
-        .ForMember(dest => dest.TenantName, opt => opt.MapFrom(src => src.Tenant.FullName));
+            .ForMember(dest => dest.PropertyTitle, opt => opt.MapFrom(src => src.Property.Title))
+            .ForMember(dest => dest.TenantName, opt => opt.MapFrom(src => src.Tenant.FullName));
 
     }
 }

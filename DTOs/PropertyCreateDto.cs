@@ -11,5 +11,6 @@ public class PropertyCreateDto
     public required int Bedrooms { get; set; }
     public required int Bathrooms { get; set; }
     public required string ImageUrl { get; set; }
+    public required IFormFile Image { get; set; }
 }
 

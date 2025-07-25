@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using PropertyListingAPI.Helpers;
+using PropertyListingAPI.Interfaces;
+using PropertyListingAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using PropertyListingAPI.Data;
-using PropertyListingAPI.Interfaces;
-using PropertyListingAPI.Services;
 using System.Text;
 using AutoMapper;
 
@@ -19,6 +20,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Register TokenService
 builder.Services.AddScoped<ITokenService, TokenService>();
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 // JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
