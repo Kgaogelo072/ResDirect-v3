@@ -16,6 +16,10 @@ namespace PropertyListingAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<User>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+
             modelBuilder.Entity<ViewingRequest>()
                 .HasOne(v => v.Property)
                 .WithMany()
@@ -33,6 +37,7 @@ namespace PropertyListingAPI.Data
                 .WithMany()
                 .HasForeignKey(p => p.AgentId)
                 .OnDelete(DeleteBehavior.Restrict); // <-- prevent cascade
+            SeedData.SeedUsers(modelBuilder);
         }
     }
 }

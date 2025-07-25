@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PropertyListingAPI.DTOs;
 using PropertyListingAPI.Interfaces;
 
 namespace PropertyListingAPI.Controllers;
@@ -18,9 +19,9 @@ public class UploadController : ControllerBase
     }
 
     [HttpPost("property-image")]
-    public async Task<IActionResult> UploadImage([FromForm] IFormFile file)
+    public async Task<IActionResult> UploadImage([FromForm] UploadImageDto dto)
     {
-        var imageUrl = await _photoService.UploadImageAsync(file);
-        return Ok(new { imageUrl });
+        var result = await _photoService.UploadImageAsync(dto.File);
+        return Ok(result);
     }
 }
