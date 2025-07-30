@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using PropertyListingAPI.Data;
 using System.Text;
 using AutoMapper;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,6 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // Register TokenService
 builder.Services.AddScoped<ITokenService, TokenService>();
-
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
 builder.Services.AddScoped<IPhotoService, PhotoService>();
 
@@ -41,8 +41,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend",
+        policy => policy
+            .AllowAnyOrigin() // For production use: .WithOrigins("http://localhost:4200")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+    );
+});
+
 // Add Controllers
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(opts =>
+    {
+        opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
 
 // Swagger with JWT Auth Support
 builder.Services.AddSwaggerGen(options =>
@@ -83,7 +98,10 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // 👈 Important: Must come before UseAuthorization
+// Add this line to enable CORS for the frontend
+app.UseCors("AllowFrontend");
+
+app.UseAuthentication(); // Must come before UseAuthorization
 app.UseAuthorization();
 
 app.MapControllers();
