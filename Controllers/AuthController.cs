@@ -24,7 +24,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserRegisterDto dto)
+    public async Task<ActionResult<UserDto>> Register(UserRegisterDto dto)
     {
         if (await _context.Users.AnyAsync(u => u.Email == dto.Email.ToLower()))
             return BadRequest("Email already registered");
@@ -44,12 +44,18 @@ public class AuthController : ControllerBase
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
-
-        return Ok(new { token = _tokenService.CreateToken(user) });
+        
+        return new UserDto
+        {
+            Email = user.Email,
+            FullName = user.FullName,
+            Token = _tokenService.CreateToken(user),
+            Role = user.Role
+        };
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserLoginDto dto)
+    public async Task<ActionResult<UserDto>> Login(UserLoginDto dto)
     {
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email.ToLower());
         if (user == null) return Unauthorized("Invalid email");
@@ -60,7 +66,13 @@ public class AuthController : ControllerBase
         if (!computedHash.SequenceEqual(user.PasswordHash))
             return Unauthorized("Invalid password");
 
-        return Ok(new { token = _tokenService.CreateToken(user) });
+    return Ok(new UserDto
+    {
+        Email = user.Email,
+        FullName = user.FullName,
+        Token = _tokenService.CreateToken(user),
+        Role = user.Role
+    });
     }
 }
 
