@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LoginRequest, LoginResponse, User } from '../models/user.model';
+import { LoginRequest, LoginResponse, SignupRequest, SignupResponse, User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +29,19 @@ export class AuthService {
         tap(response => {
           this.setAuthData(response);
           this.isLoading.set(false);
+        })
+      );
+  }
+
+  signup(signupData: SignupRequest): Observable<SignupResponse> {
+    this.isLoading.set(true);
+    
+    return this.http.post<SignupResponse>(`${this.apiUrl}/auth/register`, signupData)
+      .pipe(
+        tap(response => {
+          this.isLoading.set(false);
+          // Note: We don't automatically log in the user after signup
+          // They need to verify their email first
         })
       );
   }

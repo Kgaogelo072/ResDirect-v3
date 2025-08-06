@@ -9,6 +9,10 @@ dist/
 build/
 out/
 
+# Angular cache
+.angular/cache/
+.angular/
+
 # Environment variables
 .env
 .env.local

@@ -1,0 +1,257 @@
+<div class="min-h-screen flex">
+  <!-- Left side - Signup Form -->
+  <div class="flex-1 flex items-center justify-center p-8 bg-base-100">
+    <div class="w-full max-w-md">
+      <!-- Logo and Title -->
+      <div class="text-center mb-8">
+        <div class="flex items-center justify-center mb-4">
+          <img 
+            src="assets/resdirect-logo.png" 
+            alt="ResDirect Logo"
+            class="w-30 h-30 rounded-lg object-contain"
+          />
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-3xl text-primary font-bold">Create Account</h1>
+        <p class="text-base-content/60 mt-2">
+          Already have an account? 
+          <a routerLink="/login" class="text-primary hover:text-primary-focus font-medium">Sign in</a>
+        </p>
+      </div>
+
+      <!-- Signup Form -->
+      <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Success Message -->
+        <div class="alert alert-success" *ngIf="successMessage()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{{ successMessage() }}</span>
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-error" *ngIf="errorMessage()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{{ errorMessage() }}</span>
+        </div>
+
+        <!-- Name Fields Row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- First Name Field -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-medium">First Name*</span>
+            </label>
+            <input 
+              type="text" 
+              formControlName="firstName"
+              placeholder="Enter your first name"
+              class="input input-bordered w-full"
+              [class.input-error]="isFieldInvalid('firstName')"
+            />
+            <label class="label" *ngIf="getFieldError('firstName')">
+              <span class="label-text-alt text-error">{{ getFieldError('firstName') }}</span>
+            </label>
+          </div>
+
+          <!-- Last Name Field -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-medium">Last Name*</span>
+            </label>
+            <input 
+              type="text" 
+              formControlName="lastName"
+              placeholder="Enter your last name"
+              class="input input-bordered w-full"
+              [class.input-error]="isFieldInvalid('lastName')"
+            />
+            <label class="label" *ngIf="getFieldError('lastName')">
+              <span class="label-text-alt text-error">{{ getFieldError('lastName') }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-medium">Email Address*</span>
+          </label>
+          <input 
+            type="email" 
+            formControlName="email"
+            placeholder="Enter your email"
+            class="input input-bordered w-full"
+            [class.input-error]="isFieldInvalid('email')"
+          />
+          <label class="label" *ngIf="getFieldError('email')">
+            <span class="label-text-alt text-error">{{ getFieldError('email') }}</span>
+          </label>
+        </div>
+
+        <!-- Phone Number Field -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-medium">Phone Number*</span>
+          </label>
+          <input 
+            type="tel" 
+            formControlName="phoneNumber"
+            placeholder="Enter your phone number"
+            class="input input-bordered w-full"
+            [class.input-error]="isFieldInvalid('phoneNumber')"
+          />
+          <label class="label" *ngIf="getFieldError('phoneNumber')">
+            <span class="label-text-alt text-error">{{ getFieldError('phoneNumber') }}</span>
+          </label>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-medium">Password*</span>
+          </label>
+          <div class="relative">
+            <input 
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Create a strong password"
+              class="input input-bordered w-full pr-12"
+              [class.input-error]="isFieldInvalid('password')"
+            />
+            <button 
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <svg *ngIf="showPassword()" class="h-5 w-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464M9.878 9.878l4.242 4.242m0 0L15.536 15.536M14.12 14.12l4.243 4.243M14.12 14.12L8.464 8.464"></path>
+              </svg>
+              <svg *ngIf="!showPassword()" class="h-5 w-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
+          <label class="label" *ngIf="getFieldError('password')">
+            <span class="label-text-alt text-error">{{ getFieldError('password') }}</span>
+          </label>
+          <label class="label">
+            <span class="label-text-alt text-base-content/60">
+              Password must contain uppercase, lowercase, number, and special character
+            </span>
+          </label>
+        </div>
+
+        <!-- Confirm Password Field -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-medium">Confirm Password*</span>
+          </label>
+          <div class="relative">
+            <input 
+              [type]="showConfirmPassword() ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              placeholder="Confirm your password"
+              class="input input-bordered w-full pr-12"
+              [class.input-error]="isFieldInvalid('confirmPassword')"
+            />
+            <button 
+              type="button"
+              (click)="toggleConfirmPasswordVisibility()"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <svg *ngIf="showConfirmPassword()" class="h-5 w-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464M9.878 9.878l4.242 4.242m0 0L15.536 15.536M14.12 14.12l4.243 4.243M14.12 14.12L8.464 8.464"></path>
+              </svg>
+              <svg *ngIf="!showConfirmPassword()" class="h-5 w-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
+          <label class="label" *ngIf="getFieldError('confirmPassword')">
+            <span class="label-text-alt text-error">{{ getFieldError('confirmPassword') }}</span>
+          </label>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="form-control">
+          <label class="label cursor-pointer justify-start">
+            <input 
+              type="checkbox" 
+              formControlName="agreeToTerms" 
+              class="checkbox checkbox-primary checkbox-sm mr-3"
+              [class.checkbox-error]="isFieldInvalid('agreeToTerms')"
+            />
+            <span class="label-text">
+              I agree to the 
+              <a href="#" class="text-primary hover:text-primary-focus font-medium">Terms of Service</a> 
+              and 
+              <a href="#" class="text-primary hover:text-primary-focus font-medium">Privacy Policy</a>*
+            </span>
+          </label>
+          <label class="label" *ngIf="getFieldError('agreeToTerms')">
+            <span class="label-text-alt text-error">{{ getFieldError('agreeToTerms') }}</span>
+          </label>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          class="btn btn-primary w-full"
+          [class.loading]="isSubmitting()"
+          [disabled]="isSubmitting()"
+        >
+          <span *ngIf="isSubmitting()">
+            <span class="loading loading-spinner loading-sm"></span>
+            Creating account...
+          </span>
+          <span *ngIf="!isSubmitting()">
+            Create Account
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right side - Welcome Section -->
+  <div class="hidden lg:flex flex-1 bg-primary items-center justify-center p-12">
+    <div class="max-w-md text-center text-white">
+      <h2 class="text-4xl font-bold mb-6">Join ResDirect<br />Community</h2>
+      <p class="text-xl mb-8">
+        Create your account to access exclusive property listings, book viewings instantly, 
+        and connect with verified landlords. Your perfect home is just a click away!
+      </p>
+      <div class="grid grid-cols-2 gap-4 text-left">
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          <span>Verified Properties</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          <span>Instant Bookings</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          <span>24/7 Support</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+          </svg>
+          <span>Secure Platform</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
