@@ -1,0 +1,125 @@
+<div class="min-h-screen flex">
+  <!-- Left side - Login Form -->
+  <div class="flex-1 flex items-center justify-center p-8 bg-base-100">
+    <div class="w-full max-w-md">
+      <!-- Logo and Title -->
+    <div class="text-center mb-8">
+      <div class="flex items-center justify-center mb-4">
+        <img 
+          src="assets/resdirect-logo.png" 
+          alt="ResDirect Logo"
+          class="w-30 h-30 rounded-lg object-contain"
+        />
+      </div>
+
+      <!-- Title -->
+      <h1 class="text-3xl font-bold text-base-content">Sign in</h1>
+      <p class="text-base-content/60 mt-2">
+        Don't have an account? 
+        <a href="#" class="text-primary hover:text-primary-focus font-medium">Sign up</a>
+      </p>
+    </div>
+
+
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Error Message -->
+        <div class="alert alert-error" *ngIf="errorMessage()">
+          <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{{ errorMessage() }}</span>
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-medium">Email address*</span>
+          </label>
+          <input 
+            type="email" 
+            formControlName="email"
+            placeholder="Enter your email"
+            class="input input-bordered w-full"
+            [class.input-error]="isFieldInvalid('email')"
+          />
+          <label class="label" *ngIf="getFieldError('email')">
+            <span class="label-text-alt text-error">{{ getFieldError('email') }}</span>
+          </label>
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text font-medium">Password*</span>
+          </label>
+          <div class="relative">
+            <input 
+              [type]="showPassword() ? 'text' : 'password'"
+              formControlName="password"
+              placeholder="Enter your password"
+              class="input input-bordered w-full pr-12"
+              [class.input-error]="isFieldInvalid('password')"
+            />
+            <button 
+              type="button"
+              (click)="togglePasswordVisibility()"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <svg *ngIf="showPassword()" class="h-5 w-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L8.464 8.464M9.878 9.878l4.242 4.242m0 0L15.536 15.536M14.12 14.12l4.243 4.243M14.12 14.12L8.464 8.464"></path>
+              </svg>
+              <svg *ngIf="!showPassword()" class="h-5 w-5 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
+          <label class="label" *ngIf="getFieldError('password')">
+            <span class="label-text-alt text-error">{{ getFieldError('password') }}</span>
+          </label>
+        </div>
+
+        <!-- Remember Me & Forgot Password -->
+        <div class="flex items-center justify-between">
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input type="checkbox" formControlName="rememberMe" class="checkbox checkbox-primary checkbox-sm" />
+              <span class="label-text ml-2">Remember me</span>
+            </label>
+          </div>
+          <a href="#" class="text-primary hover:text-primary-focus text-sm font-medium">
+            Forgot password?
+          </a>
+        </div>
+
+        <!-- Submit Button -->
+        <button 
+          type="submit" 
+          class="btn btn-primary w-full"
+          [class.loading]="isSubmitting()"
+          [disabled]="isSubmitting()"
+        >
+          <span *ngIf="isSubmitting()">
+            <span class="loading loading-spinner loading-sm"></span>
+            Signing in...
+          </span>
+          <span *ngIf="!isSubmitting()">
+            Sign in
+          </span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right side - Welcome Section -->
+  <div class="hidden lg:flex flex-1 bg-primary items-center justify-center p-12">
+    <div class="max-w-md text-center text-primary-content">
+      <h2 class="text-4xl font-bold mb-6">Find Your Perfect Home<br />with ResDirect</h2>
+      <p class="text-xl mb-8 opacity-90">
+        ResDirect connects renters with the best available properties across the city. 
+        Discover listings, book viewings, and get closer to your new home — all in one place.
+      </p>
+    </div>
+  </div>
+</div> 
