@@ -10,6 +10,7 @@ namespace PropertyListingAPI.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<Property> Properties { get; set; }
+        public DbSet<PropertyImage> PropertyImages { get; set; }
         public DbSet<ViewingRequest> ViewingRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,7 +38,19 @@ namespace PropertyListingAPI.Data
                 .WithMany()
                 .HasForeignKey(p => p.AgentId)
                 .OnDelete(DeleteBehavior.Restrict); // <-- prevent cascade
-            SeedData.SeedUsers(modelBuilder);
+
+            // Configure PropertyImage relationship
+            modelBuilder.Entity<PropertyImage>()
+                .HasOne(pi => pi.Property)
+                .WithMany(p => p.Images)
+                .HasForeignKey(pi => pi.PropertyId)
+                .OnDelete(DeleteBehavior.Cascade); // Delete images when property is deleted
+
+            // Ensure only one primary image per property
+            modelBuilder.Entity<PropertyImage>()
+                .HasIndex(pi => new { pi.PropertyId, pi.IsPrimary })
+                .HasFilter("IsPrimary = 1")
+                .IsUnique();
         }
     }
 }

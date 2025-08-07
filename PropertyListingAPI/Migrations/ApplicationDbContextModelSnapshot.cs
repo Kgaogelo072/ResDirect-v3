@@ -47,14 +47,6 @@ namespace PropertyListingAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImagePublicId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("RentalAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -72,6 +64,43 @@ namespace PropertyListingAPI.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Properties");
+                });
+
+            modelBuilder.Entity("PropertyListingAPI.Models.PropertyImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImagePublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId", "IsPrimary")
+                        .IsUnique()
+                        .HasFilter("IsPrimary = 1");
+
+                    b.ToTable("PropertyImages");
                 });
 
             modelBuilder.Entity("PropertyListingAPI.Models.User", b =>
@@ -114,41 +143,6 @@ namespace PropertyListingAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Email = "Fortunatekgaogelo@gmail.com",
-                            FullName = "Kgaogelo Tshabalala",
-                            IsApproved = true,
-                            PasswordHash = new byte[] { 237, 23, 189, 46, 142, 43, 190, 133, 62, 120, 191, 13, 184, 55, 206, 212, 92, 20, 179, 37, 242, 13, 122, 9, 92, 21, 245, 95, 198, 175, 20, 150, 221, 182, 242, 148, 225, 189, 196, 113, 242, 119, 90, 185, 7, 42, 74, 23, 131, 173, 204, 45, 166, 34, 225, 82, 206, 93, 64, 198, 193, 82, 243, 41 },
-                            PasswordSalt = new byte[] { 7, 23, 244, 83, 215, 190, 142, 92, 0, 230, 194, 88, 223, 229, 38, 27, 219, 60, 181, 178, 140, 161, 10, 55, 129, 156, 184, 22, 215, 246, 130, 104, 107, 61, 238, 235, 153, 149, 43, 69, 44, 77, 226, 127, 175, 77, 198, 248, 205, 220, 88, 4, 38, 103, 81, 30, 195, 224, 156, 240, 147, 131, 151, 143 },
-                            PhoneNumber = "0728945924",
-                            Role = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Email = "agent@example.com",
-                            FullName = "Agent User",
-                            IsApproved = true,
-                            PasswordHash = new byte[] { 237, 23, 189, 46, 142, 43, 190, 133, 62, 120, 191, 13, 184, 55, 206, 212, 92, 20, 179, 37, 242, 13, 122, 9, 92, 21, 245, 95, 198, 175, 20, 150, 221, 182, 242, 148, 225, 189, 196, 113, 242, 119, 90, 185, 7, 42, 74, 23, 131, 173, 204, 45, 166, 34, 225, 82, 206, 93, 64, 198, 193, 82, 243, 41 },
-                            PasswordSalt = new byte[] { 7, 23, 244, 83, 215, 190, 142, 92, 0, 230, 194, 88, 223, 229, 38, 27, 219, 60, 181, 178, 140, 161, 10, 55, 129, 156, 184, 22, 215, 246, 130, 104, 107, 61, 238, 235, 153, 149, 43, 69, 44, 77, 226, 127, 175, 77, 198, 248, 205, 220, 88, 4, 38, 103, 81, 30, 195, 224, 156, 240, 147, 131, 151, 143 },
-                            PhoneNumber = "0728945924",
-                            Role = 2
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Email = "tenant@example.com",
-                            FullName = "Tenant User",
-                            IsApproved = false,
-                            PasswordHash = new byte[] { 237, 23, 189, 46, 142, 43, 190, 133, 62, 120, 191, 13, 184, 55, 206, 212, 92, 20, 179, 37, 242, 13, 122, 9, 92, 21, 245, 95, 198, 175, 20, 150, 221, 182, 242, 148, 225, 189, 196, 113, 242, 119, 90, 185, 7, 42, 74, 23, 131, 173, 204, 45, 166, 34, 225, 82, 206, 93, 64, 198, 193, 82, 243, 41 },
-                            PasswordSalt = new byte[] { 7, 23, 244, 83, 215, 190, 142, 92, 0, 230, 194, 88, 223, 229, 38, 27, 219, 60, 181, 178, 140, 161, 10, 55, 129, 156, 184, 22, 215, 246, 130, 104, 107, 61, 238, 235, 153, 149, 43, 69, 44, 77, 226, 127, 175, 77, 198, 248, 205, 220, 88, 4, 38, 103, 81, 30, 195, 224, 156, 240, 147, 131, 151, 143 },
-                            PhoneNumber = "0728945924",
-                            Role = 3
-                        });
                 });
 
             modelBuilder.Entity("PropertyListingAPI.Models.ViewingRequest", b =>
@@ -195,6 +189,17 @@ namespace PropertyListingAPI.Migrations
                     b.Navigation("Agent");
                 });
 
+            modelBuilder.Entity("PropertyListingAPI.Models.PropertyImage", b =>
+                {
+                    b.HasOne("PropertyListingAPI.Models.Property", "Property")
+                        .WithMany("Images")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("PropertyListingAPI.Models.ViewingRequest", b =>
                 {
                     b.HasOne("PropertyListingAPI.Models.Property", "Property")
@@ -212,6 +217,11 @@ namespace PropertyListingAPI.Migrations
                     b.Navigation("Property");
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("PropertyListingAPI.Models.Property", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("PropertyListingAPI.Models.User", b =>

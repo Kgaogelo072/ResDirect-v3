@@ -26,14 +26,20 @@ public class PropertiesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-        var properties = await _context.Properties.Include(p => p.Agent).ToListAsync();
+        var properties = await _context.Properties
+            .Include(p => p.Agent)
+            .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+            .ToListAsync();
         return Ok(_mapper.Map<IEnumerable<PropertyReadDto>>(properties));
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> Get(int id)
     {
-        var property = await _context.Properties.Include(p => p.Agent).FirstOrDefaultAsync(p => p.Id == id);
+        var property = await _context.Properties
+            .Include(p => p.Agent)
+            .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (property == null) return NotFound();
 
         return Ok(_mapper.Map<PropertyReadDto>(property));
@@ -43,21 +49,59 @@ public class PropertiesController : ControllerBase
     [Authorize(Roles = "Agent")]
     public async Task<IActionResult> Create([FromForm] PropertyCreateDto dto)
     {
+        // Validation
+        if (dto.Images == null || dto.Images.Count == 0)
+            return BadRequest("At least 1 image is required");
+
+        if (dto.Images.Count > 5)
+            return BadRequest("Maximum 5 images allowed");
+
+        if (dto.PrimaryImageIndex < 0 || dto.PrimaryImageIndex >= dto.Images.Count)
+            return BadRequest("Invalid primary image index");
+
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
         var property = _mapper.Map<Property>(dto);
         property.AgentId = userId;
 
-        if (dto.Image != null)
+        try
         {
-            var uploadResult = await _photoService.UploadImageAsync(dto.Image);
-            property.ImageUrl = uploadResult.Url;
-            property.ImagePublicId = uploadResult.PublicId;
+            // Upload multiple images
+            var uploadResults = await _photoService.UploadMultipleImagesAsync(dto.Images);
+            
+            if (uploadResults.Count == 0)
+                return BadRequest("Failed to upload any images");
+
+            // Create PropertyImage entities
+            for (int i = 0; i < uploadResults.Count; i++)
+            {
+                var imageOrder = dto.ImageOrders.Count > i ? dto.ImageOrders[i] : i + 1;
+                var isPrimary = i == dto.PrimaryImageIndex;
+
+                property.Images.Add(new PropertyImage
+                {
+                    ImageUrl = uploadResults[i].Url,
+                    ImagePublicId = uploadResults[i].PublicId,
+                    DisplayOrder = imageOrder,
+                    IsPrimary = isPrimary,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            _context.Properties.Add(property);
+            await _context.SaveChangesAsync();
+
+            // Reload property with images for response
+            var createdProperty = await _context.Properties
+                .Include(p => p.Agent)
+                .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+                .FirstOrDefaultAsync(p => p.Id == property.Id);
+
+            return Ok(_mapper.Map<PropertyReadDto>(createdProperty));
         }
-
-        _context.Properties.Add(property);
-        await _context.SaveChangesAsync();
-
-        return Ok(_mapper.Map<PropertyReadDto>(property));
+        catch (Exception ex)
+        {
+            return BadRequest($"Failed to create property: {ex.Message}");
+        }
     }
 
     [HttpPut("{id}")]
@@ -66,28 +110,73 @@ public class PropertiesController : ControllerBase
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-        var property = await _context.Properties.FindAsync(id);
+        var property = await _context.Properties
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (property == null) return NotFound();
         if (property.AgentId != userId) return Forbid();
 
-        // Delete old image if new one is uploaded
-        if (dto.Image != null)
+        try
         {
-            if (!string.IsNullOrWhiteSpace(property.ImagePublicId))
+            // If new images are provided, replace all existing images
+            if (dto.Images != null && dto.Images.Count > 0)
             {
-                await _photoService.DeleteImageAsync(property.ImagePublicId);
+                if (dto.Images.Count > 5)
+                    return BadRequest("Maximum 5 images allowed");
+
+                if (dto.PrimaryImageIndex < 0 || dto.PrimaryImageIndex >= dto.Images.Count)
+                    return BadRequest("Invalid primary image index");
+
+                // Delete old images from Cloudinary
+                var oldPublicIds = property.Images.Select(img => img.ImagePublicId).ToList();
+                if (oldPublicIds.Any())
+                {
+                    await _photoService.DeleteMultipleImagesAsync(oldPublicIds);
+                }
+
+                // Remove old images from database
+                _context.PropertyImages.RemoveRange(property.Images);
+
+                // Upload new images
+                var uploadResults = await _photoService.UploadMultipleImagesAsync(dto.Images);
+                
+                if (uploadResults.Count == 0)
+                    return BadRequest("Failed to upload any images");
+
+                // Create new PropertyImage entities
+                property.Images.Clear();
+                for (int i = 0; i < uploadResults.Count; i++)
+                {
+                    var imageOrder = dto.ImageOrders.Count > i ? dto.ImageOrders[i] : i + 1;
+                    var isPrimary = i == dto.PrimaryImageIndex;
+
+                    property.Images.Add(new PropertyImage
+                    {
+                        ImageUrl = uploadResults[i].Url,
+                        ImagePublicId = uploadResults[i].PublicId,
+                        DisplayOrder = imageOrder,
+                        IsPrimary = isPrimary,
+                        CreatedAt = DateTime.UtcNow
+                    });
+                }
             }
 
-            var uploadResult = await _photoService.UploadImageAsync(dto.Image);
-            property.ImageUrl = uploadResult.Url;
-            property.ImagePublicId = uploadResult.PublicId;
+            // Update other property fields
+            property.Title = dto.Title;
+            property.Description = dto.Description;
+            property.RentalAmount = dto.RentalAmount;
+            property.Address = dto.Address;
+            property.Bedrooms = dto.Bedrooms;
+            property.Bathrooms = dto.Bathrooms;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Property updated successfully.");
         }
-
-        // Update other fields
-        _mapper.Map(dto, property);
-        await _context.SaveChangesAsync();
-
-        return Ok("Property updated.");
+        catch (Exception ex)
+        {
+            return BadRequest($"Failed to update property: {ex.Message}");
+        }
     }
 
     [HttpDelete("{id}")]
@@ -96,19 +185,29 @@ public class PropertiesController : ControllerBase
     {
         var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-        var property = await _context.Properties.FindAsync(id);
+        var property = await _context.Properties
+            .Include(p => p.Images)
+            .FirstOrDefaultAsync(p => p.Id == id);
         if (property == null) return NotFound();
         if (property.AgentId != userId) return Forbid();
 
-        // Delete image from Cloudinary
-        if (!string.IsNullOrWhiteSpace(property.ImagePublicId))
+        try
         {
-            await _photoService.DeleteImageAsync(property.ImagePublicId);
+            // Delete all images from Cloudinary
+            var publicIds = property.Images.Select(img => img.ImagePublicId).ToList();
+            if (publicIds.Any())
+            {
+                await _photoService.DeleteMultipleImagesAsync(publicIds);
+            }
+
+            _context.Properties.Remove(property);
+            await _context.SaveChangesAsync();
+
+            return Ok("Property deleted successfully.");
         }
-
-        _context.Properties.Remove(property);
-        await _context.SaveChangesAsync();
-
-        return Ok("Property deleted.");
+        catch (Exception ex)
+        {
+            return BadRequest($"Failed to delete property: {ex.Message}");
+        }
     }
 }

@@ -11,9 +11,10 @@ public class Property
     public required string Address { get; set; }
     public int Bedrooms { get; set; }
     public int Bathrooms { get; set; }
-    public required string ImageUrl { get; set; }
-    public required string ImagePublicId { get; set; }
     public int AgentId { get; set; }
     public User? Agent { get; set; }
+    
+    // Multiple images support
+    public ICollection<PropertyImage> Images { get; set; } = new List<PropertyImage>();
 }
 
