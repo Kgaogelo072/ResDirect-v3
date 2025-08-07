@@ -109,6 +109,32 @@
           </label>
         </div>
 
+                  <!-- Role Selection Field -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text font-medium">I am a*</span>
+            </label>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label 
+                *ngFor="let role of availableRoles" 
+                class="cursor-pointer flex items-center tooltip tooltip-top"
+                [attr.data-tip]="role.description"
+              >
+                <input 
+                  type="radio" 
+                  [value]="role.value"
+                  formControlName="role"
+                  class="radio radio-primary mr-3"
+                  [class.radio-error]="isFieldInvalid('role')"
+                />
+                <span class="font-medium">{{ role.label }}</span>
+              </label>
+            </div>
+            <label class="label" *ngIf="getFieldError('role')">
+              <span class="label-text-alt text-error">{{ getFieldError('role') }}</span>
+            </label>
+          </div>
+
         <!-- Password Field -->
         <div class="form-control">
           <label class="label">

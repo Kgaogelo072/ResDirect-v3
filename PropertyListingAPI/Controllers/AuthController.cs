@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
 
         var user = new User
         {
-            FullName = dto.FullName,
+            FullName = $"{dto.FirstName} {dto.LastName}",
             Email = dto.Email.ToLower(),
             PhoneNumber = dto.PhoneNumber,
             PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(dto.Password)),

@@ -21,6 +21,12 @@ export class SignupComponent {
   successMessage = signal('');
   isSubmitting = signal(false);
 
+  // Available roles for selection
+  availableRoles = [
+    { value: 'Agent', label: 'Property Agent', description: 'List and manage properties' },
+    { value: 'Tenant', label: 'Tenant', description: 'Search and book property viewings' }
+  ];
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -31,6 +37,7 @@ export class SignupComponent {
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      role: ['Agent', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8), this.passwordValidator]],
       confirmPassword: ['', [Validators.required]],
       agreeToTerms: [false, [Validators.requiredTrue]]
@@ -91,7 +98,8 @@ export class SignupComponent {
         lastName: this.signupForm.value.lastName,
         email: this.signupForm.value.email,
         phoneNumber: this.signupForm.value.phoneNumber,
-        password: this.signupForm.value.password
+        password: this.signupForm.value.password,
+        role: this.signupForm.value.role
       };
 
       this.authService.signup(signupData).subscribe({
