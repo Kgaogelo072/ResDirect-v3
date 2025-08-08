@@ -1,0 +1,184 @@
+<div class="space-y-6">
+  <!-- Statistics Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Total Properties -->
+    <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200 card">
+      <div class="flex items-center">
+        <div class="p-2 bg-blue-100 rounded-lg">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Total Properties</p>
+          <p class="text-2xl font-bold text-gray-900">{{ stats?.totalProperties || 0 }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Listings -->
+    <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200 card">
+      <div class="flex items-center">
+        <div class="p-2 bg-green-100 rounded-lg">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Active Listings</p>
+          <p class="text-2xl font-bold text-gray-900">{{ stats?.activeListings || 0 }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Requests -->
+    <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200 card">
+      <div class="flex items-center">
+        <div class="p-2 bg-yellow-100 rounded-lg">
+          <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Pending Requests</p>
+          <p class="text-2xl font-bold text-gray-900">{{ stats?.pendingRequests || 0 }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Views -->
+    <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200 card">
+      <div class="flex items-center">
+        <div class="p-2 bg-purple-100 rounded-lg">
+          <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm font-medium text-gray-600">Total Views</p>
+          <p class="text-2xl font-bold text-gray-900">{{ stats?.totalViews || 0 }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Properties -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900">Recent Properties</h3>
+        <p class="text-sm text-gray-600">Your latest property listings</p>
+      </div>
+      <div class="p-6">
+        <div *ngIf="isLoading()" class="flex justify-center py-8">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+        
+        <div *ngIf="!isLoading() && recentProperties().length === 0" 
+             class="text-center py-8 text-gray-500">
+          <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+          </svg>
+          <p>No properties yet</p>
+          <p class="text-sm">Start by adding your first property listing</p>
+        </div>
+
+        <div *ngIf="!isLoading()" class="space-y-4">
+          <div *ngFor="let property of recentProperties()" 
+               class="flex items-center space-x-4 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <img [src]="property.primaryImageUrl || 'assets/placeholder-property.jpg'" 
+                 [alt]="property.title"
+                 class="w-16 h-16 object-cover rounded-lg">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">{{ property.title }}</p>
+              <p class="text-sm text-gray-600 truncate">{{ property.address }}</p>
+              <p class="text-sm font-semibold text-primary">{{ formatCurrency(property.rentalAmount) }}/month</p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-gray-500">{{ property.bedrooms }}BR • {{ property.bathrooms }}BA</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Viewing Requests -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900">Recent Viewing Requests</h3>
+        <p class="text-sm text-gray-600">Latest requests from tenants</p>
+      </div>
+      <div class="p-6">
+        <div *ngIf="isLoading()" class="flex justify-center py-8">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+        
+        <div *ngIf="!isLoading() && recentRequests().length === 0" 
+             class="text-center py-8 text-gray-500">
+          <svg class="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+          </svg>
+          <p>No viewing requests yet</p>
+          <p class="text-sm">Requests will appear here when tenants book viewings</p>
+        </div>
+
+        <div *ngIf="!isLoading()" class="space-y-4">
+          <div *ngFor="let request of recentRequests()" 
+               class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors">
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900 truncate">{{ request.propertyTitle }}</p>
+              <p class="text-sm text-gray-600">{{ request.tenantName }}</p>
+              <p class="text-xs text-gray-500">{{ formatDate(request.viewingDate) }}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="px-2 py-1 text-xs font-medium rounded-full" 
+                    [class]="getStatusColor(request.status)">
+                {{ request.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <button class="flex items-center justify-center px-4 py-3 bg-primary text-white rounded-lg hover:bg-primary-focus transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+        </svg>
+        Add New Property
+      </button>
+      
+      <button class="flex items-center justify-center px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+        </svg>
+        View Analytics
+      </button>
+      
+      <button class="flex items-center justify-center px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Manage Requests
+      </button>
+    </div>
+  </div>
+</div> 

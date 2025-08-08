@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cteR/ORPBKE=",
+  "dgSpecHash": "rMo97fx3DyY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\PropertyListingAPI\\PropertyListingAPI\\PropertyListingAPI.csproj",
+  "projectFilePath": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\Solution\\PropertyListingAPI\\PropertyListingAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\fortu\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\fortu\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

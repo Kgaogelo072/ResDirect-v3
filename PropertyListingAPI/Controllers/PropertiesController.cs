@@ -45,6 +45,21 @@ public class PropertiesController : ControllerBase
         return Ok(_mapper.Map<PropertyReadDto>(property));
     }
 
+    [HttpGet("by-agent")]
+    [Authorize(Roles = "Agent")]
+    public async Task<IActionResult> GetByAgent()
+    {
+        var agentId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var properties = await _context.Properties
+            .Include(p => p.Agent)
+            .Include(p => p.Images.OrderBy(i => i.DisplayOrder))
+            .Where(p => p.AgentId == agentId)
+            .OrderByDescending(p => p.Id)
+            .ToListAsync();
+        
+        return Ok(_mapper.Map<IEnumerable<PropertyReadDto>>(properties));
+    }
+
     [HttpPost]
     [Authorize(Roles = "Agent")]
     public async Task<IActionResult> Create([FromForm] PropertyCreateDto dto)

@@ -48,8 +48,17 @@ export class LoginComponent {
       this.authService.login(credentials).subscribe({
         next: (response) => {
           this.isSubmitting.set(false);
-          // Redirect to dashboard or home page after successful login
-          this.router.navigate(['/dashboard']);
+          // Redirect based on user role
+          // The response now contains user data directly
+          if (response.role === 'Agent') {
+            this.router.navigate(['/agent-dashboard']);
+          } else if (response.role === 'Tenant') {
+            this.router.navigate(['/tenant-dashboard']); // Will be created later
+          } else if (response.role === 'Admin') {
+            this.router.navigate(['/admin-dashboard']); // Will be created later
+          } else {
+            this.router.navigate(['/']);
+          }
         },
         error: (error) => {
           this.isSubmitting.set(false);

@@ -56,10 +56,23 @@ export class AuthService {
 
   private setAuthData(response: LoginResponse): void {
     localStorage.setItem(this.tokenKey, response.token);
-    localStorage.setItem('user_data', JSON.stringify(response.user));
-    this.currentUserSubject.next(response.user);
+    
+    // Create user object from the response data
+    const user: User = {
+      id: response.id,
+      email: response.email,
+      fullName: response.fullName,
+      firstName: response.firstName,
+      lastName: response.lastName,
+      phoneNumber: response.phoneNumber,
+      role: response.role,
+      isApproved: response.isApproved
+    };
+    
+    localStorage.setItem('user_data', JSON.stringify(user));
+    this.currentUserSubject.next(user);
     this.isAuthenticated.set(true);
-    this.currentUser.set(response.user);
+    this.currentUser.set(user);
   }
 
   private checkAuthStatus(): void {

@@ -13,8 +13,15 @@ export interface SignupRequest {
 }
 
 export interface LoginResponse {
+  id: number;
+  email: string;
   token: string;
-  user: User;
+  fullName: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  role: string;
+  isApproved: boolean;
 }
 
 export interface SignupResponse {
@@ -23,11 +30,12 @@ export interface SignupResponse {
 }
 
 export interface User {
-  id: string;
+  id: number;
   email: string;
+  fullName: string;
   firstName: string;
   lastName: string;
-  phoneNumber?: string;
+  phoneNumber: string;
   role: string;
   isApproved: boolean;
 } 

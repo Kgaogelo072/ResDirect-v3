@@ -1,0 +1,71 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-2">Viewing Requests</h2>
+    <p class="text-gray-600">Manage viewing requests from tenants for your properties</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading()" class="flex justify-center py-12">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!isLoading() && requests().length === 0" 
+       class="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
+    <svg class="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+    </svg>
+    <h3 class="text-lg font-semibold text-gray-900 mb-2">No viewing requests yet</h3>
+    <p class="text-gray-600">Viewing requests from tenants will appear here</p>
+  </div>
+
+  <!-- Requests List -->
+  <div *ngIf="!isLoading() && requests().length > 0" class="space-y-4">
+    <div *ngFor="let request of requests()" 
+         class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex-1">
+          <h3 class="text-lg font-semibold text-gray-900">{{ request.propertyTitle }}</h3>
+          <p class="text-gray-600">Requested by {{ request.tenantName }}</p>
+        </div>
+        
+        <span class="px-3 py-1 text-sm font-medium rounded-full" 
+              [class]="getStatusColor(request.status)">
+          {{ request.status }}
+        </span>
+      </div>
+      
+      <div class="mb-4">
+        <p class="text-sm text-gray-600">
+          <strong>Viewing Date:</strong> {{ formatDate(request.viewingDate) }}
+        </p>
+        <p class="text-sm text-gray-600 mt-1">
+          <strong>Requested:</strong> {{ formatDate(request.createdAt) }}
+        </p>
+      </div>
+      
+      <div *ngIf="request.status === 'Pending'" class="flex space-x-3">
+        <button (click)="updateStatus(request.id, 'Approved')"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+          Approve
+        </button>
+        <button (click)="updateStatus(request.id, 'Rejected')"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+          Reject
+        </button>
+      </div>
+      
+      <div *ngIf="request.status === 'Approved'" class="flex space-x-3">
+        <button (click)="updateStatus(request.id, 'Completed')"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+          Mark as Completed
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

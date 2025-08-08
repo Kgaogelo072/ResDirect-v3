@@ -7987,11 +7987,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\PropertyListingAPI\\PropertyListingAPI\\PropertyListingAPI.csproj",
+      "projectUniqueName": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\Solution\\PropertyListingAPI\\PropertyListingAPI.csproj",
       "projectName": "PropertyListingAPI",
-      "projectPath": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\PropertyListingAPI\\PropertyListingAPI\\PropertyListingAPI.csproj",
+      "projectPath": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\Solution\\PropertyListingAPI\\PropertyListingAPI.csproj",
       "packagesPath": "C:\\Users\\fortu\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\PropertyListingAPI\\PropertyListingAPI\\obj\\",
+      "outputPath": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\Solution\\PropertyListingAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

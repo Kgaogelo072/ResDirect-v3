@@ -47,10 +47,15 @@ public class AuthController : ControllerBase
         
         return new UserDto
         {
+            Id = user.Id,
             Email = user.Email,
             FullName = user.FullName,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            PhoneNumber = user.PhoneNumber,
             Token = _tokenService.CreateToken(user),
-            Role = user.Role
+            Role = user.Role,
+            IsApproved = user.IsApproved
         };
     }
 
@@ -66,13 +71,23 @@ public class AuthController : ControllerBase
         if (!computedHash.SequenceEqual(user.PasswordHash))
             return Unauthorized("Invalid password");
 
-    return Ok(new UserDto
-    {
-        Email = user.Email,
-        FullName = user.FullName,
-        Token = _tokenService.CreateToken(user),
-        Role = user.Role
-    });
+        // Split the full name into first and last name
+        var nameParts = user.FullName.Split(' ', 2);
+        var firstName = nameParts.Length > 0 ? nameParts[0] : "";
+        var lastName = nameParts.Length > 1 ? nameParts[1] : "";
+
+        return Ok(new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FullName = user.FullName,
+            FirstName = firstName,
+            LastName = lastName,
+            PhoneNumber = user.PhoneNumber,
+            Token = _tokenService.CreateToken(user),
+            Role = user.Role,
+            IsApproved = user.IsApproved
+        });
     }
 }
 
