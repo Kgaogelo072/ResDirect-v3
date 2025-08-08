@@ -9,47 +9,69 @@ namespace PropertyListingAPI.Services;
 public class PhotoService : IPhotoService
 {
     private readonly Cloudinary _cloudinary;
+    private readonly ILogger<PhotoService> _logger;
 
-    public PhotoService(IOptions<CloudinarySettings> config)
+    public PhotoService(IOptions<CloudinarySettings> config, ILogger<PhotoService> logger)
     {
-        var acc = new Account(
+        _logger = logger;
+        
+        var account = new Account(
             config.Value.CloudName,
             config.Value.ApiKey,
             config.Value.ApiSecret
         );
-
-        _cloudinary = new Cloudinary(acc);
+        
+        _cloudinary = new Cloudinary(account);
+        
+        // Log configuration (without sensitive data)
+        _logger.LogInformation($"Cloudinary initialized with CloudName: {config.Value.CloudName}");
     }
 
     public async Task<PhotoUploadResult> UploadImageAsync(IFormFile file)
     {
-        if (file.Length == 0) return new PhotoUploadResult();
-
-        await using var stream = file.OpenReadStream();
-
+        _logger.LogInformation($"Attempting to upload image: {file.FileName}, Size: {file.Length} bytes");
+        
+        using var stream = file.OpenReadStream();
         var uploadParams = new ImageUploadParams
         {
             File = new FileDescription(file.FileName, stream),
             Transformation = new Transformation().Height(500).Width(800).Crop("fill")
         };
 
-        var result = await _cloudinary.UploadAsync(uploadParams);
-
-        if (result.Error != null) throw new Exception(result.Error.Message);
-
-        return new PhotoUploadResult
+        try
         {
-            Url = result.SecureUrl.ToString(),
-            PublicId = result.PublicId
-        };
+            var result = await _cloudinary.UploadAsync(uploadParams);
+
+            if (result.Error != null)
+            {
+                _logger.LogError($"Cloudinary upload error: {result.Error.Message}");
+                throw new Exception(result.Error.Message);
+            }
+
+            _logger.LogInformation($"Image uploaded successfully: {result.SecureUrl}");
+            
+            return new PhotoUploadResult
+            {
+                Url = result.SecureUrl.ToString(),
+                PublicId = result.PublicId
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Exception during image upload: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task<List<PhotoUploadResult>> UploadMultipleImagesAsync(List<IFormFile> files)
     {
+        _logger.LogInformation($"Attempting to upload {files.Count} images");
+        
         var results = new List<PhotoUploadResult>();
         
         // Limit to maximum 5 images
         var filesToProcess = files.Take(5).Where(f => f.Length > 0).ToList();
+        _logger.LogInformation($"Processing {filesToProcess.Count} valid files");
         
         foreach (var file in filesToProcess)
         {
@@ -59,16 +81,17 @@ public class PhotoService : IPhotoService
                 if (!string.IsNullOrEmpty(result.Url))
                 {
                     results.Add(result);
+                    _logger.LogInformation($"Successfully uploaded image {file.FileName}");
                 }
             }
             catch (Exception ex)
             {
-                // Log error but continue with other images
-                // In production, you might want to use a proper logging framework
-                Console.WriteLine($"Failed to upload image {file.FileName}: {ex.Message}");
+                _logger.LogError($"Failed to upload image {file.FileName}: {ex.Message}");
+                // Continue with other images but log the error
             }
         }
         
+        _logger.LogInformation($"Upload completed. Successfully uploaded {results.Count} out of {filesToProcess.Count} images");
         return results;
     }
 
@@ -90,8 +113,7 @@ public class PhotoService : IPhotoService
             }
             catch (Exception ex)
             {
-                // Log error but continue with other deletions
-                Console.WriteLine($"Failed to delete image {publicId}: {ex.Message}");
+                _logger.LogError($"Failed to delete image {publicId}: {ex.Message}");
             }
         }
     }

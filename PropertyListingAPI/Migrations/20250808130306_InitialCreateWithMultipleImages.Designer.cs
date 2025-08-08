@@ -12,8 +12,8 @@ using PropertyListingAPI.Data;
 namespace PropertyListingAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250725115349_UserPhoneNumber")]
-    partial class UserPhoneNumber
+    [Migration("20250808130306_InitialCreateWithMultipleImages")]
+    partial class InitialCreateWithMultipleImages
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,10 +50,6 @@ namespace PropertyListingAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("RentalAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -73,6 +69,43 @@ namespace PropertyListingAPI.Migrations
                     b.ToTable("Properties");
                 });
 
+            modelBuilder.Entity("PropertyListingAPI.Models.PropertyImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ImagePublicId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsPrimary")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PropertyId", "IsPrimary")
+                        .IsUnique()
+                        .HasFilter("IsPrimary = 1");
+
+                    b.ToTable("PropertyImages");
+                });
+
             modelBuilder.Entity("PropertyListingAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -83,7 +116,7 @@ namespace PropertyListingAPI.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -108,6 +141,9 @@ namespace PropertyListingAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -156,6 +192,17 @@ namespace PropertyListingAPI.Migrations
                     b.Navigation("Agent");
                 });
 
+            modelBuilder.Entity("PropertyListingAPI.Models.PropertyImage", b =>
+                {
+                    b.HasOne("PropertyListingAPI.Models.Property", "Property")
+                        .WithMany("Images")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("PropertyListingAPI.Models.ViewingRequest", b =>
                 {
                     b.HasOne("PropertyListingAPI.Models.Property", "Property")
@@ -173,6 +220,11 @@ namespace PropertyListingAPI.Migrations
                     b.Navigation("Property");
 
                     b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("PropertyListingAPI.Models.Property", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("PropertyListingAPI.Models.User", b =>

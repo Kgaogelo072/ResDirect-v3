@@ -15,12 +15,14 @@ public class PropertiesController : ControllerBase
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
     private readonly IPhotoService _photoService;
+    private readonly ILogger<PropertiesController> _logger;
 
-    public PropertiesController(ApplicationDbContext context, IMapper mapper, IPhotoService photoService)
+    public PropertiesController(ApplicationDbContext context, IMapper mapper, IPhotoService photoService, ILogger<PropertiesController> logger)
     {
         _context = context;
         _mapper = mapper;
         _photoService = photoService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -80,11 +82,18 @@ public class PropertiesController : ControllerBase
 
         try
         {
+            _logger.LogInformation($"Creating property with {dto.Images.Count} images for user {userId}");
+            
             // Upload multiple images
             var uploadResults = await _photoService.UploadMultipleImagesAsync(dto.Images);
             
             if (uploadResults.Count == 0)
-                return BadRequest("Failed to upload any images");
+            {
+                _logger.LogError("Failed to upload any images to Cloudinary");
+                return BadRequest("Failed to upload any images. Please check your internet connection and try again.");
+            }
+
+            _logger.LogInformation($"Successfully uploaded {uploadResults.Count} images");
 
             // Create PropertyImage entities
             for (int i = 0; i < uploadResults.Count; i++)
@@ -105,6 +114,8 @@ public class PropertiesController : ControllerBase
             _context.Properties.Add(property);
             await _context.SaveChangesAsync();
 
+            _logger.LogInformation($"Property created successfully with ID: {property.Id}");
+
             // Reload property with images for response
             var createdProperty = await _context.Properties
                 .Include(p => p.Agent)
@@ -115,6 +126,7 @@ public class PropertiesController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.LogError($"Error creating property: {ex.Message}");
             return BadRequest($"Failed to create property: {ex.Message}");
         }
     }
