@@ -28,6 +28,9 @@ export class PublicPropertyListingComponent implements OnInit {
   isMobileView = signal(false);
   showBackToTop = signal(false);
   
+  // Placeholder image data URI
+  private readonly placeholderImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjI1MCIgZmlsbD0iI2Y0ZjRmNCIvPgogIDxnIGZpbGw9IiM5Y2EzYWYiPgogICAgPHJlY3QgeD0iMTUwIiB5PSI4MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI2MCIgcng9IjQiLz4KICAgIDxwb2x5Z29uIHBvaW50cz0iMTcwLDEwMCAxODAsOTAgMTkwLDEwMCAyMDAsMTAwIDIwMCwxMjAgMTcwLDEyMCIvPgogICAgPGNpcmNsZSBjeD0iMTgwIiBjeT0iMTAwIiByPSIzIiBmaWxsPSIjZjU5ZTBiIi8+CiAgPC9nPgogIDx0ZXh0IHg9IjIwMCIgeT0iMTgwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM2YjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlByb3BlcnR5IEltYWdlPC90ZXh0Pgo8L3N2Zz4=';
+  
   // Computed filtered properties
   filteredProperties = computed(() => {
     let filtered = this.properties();
@@ -170,7 +173,7 @@ export class PublicPropertyListingComponent implements OnInit {
       const primaryImage = property.images.find(img => img.isPrimary);
       return primaryImage?.imageUrl || property.images[0].imageUrl;
     }
-    return '/assets/placeholder-property.jpg';
+    return this.placeholderImage;
   }
 
   formatCurrency(amount: number): string {

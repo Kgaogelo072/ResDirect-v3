@@ -22,11 +22,24 @@
   overflow: hidden;
 }
 
-/* Hero Section Responsive */
+/* Hero Section - Mobile First Responsive */
 .hero {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
   overflow: hidden;
+  min-height: 60vh;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    min-height: 70vh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 75vh;
+  }
 }
 
 .hero::before {
@@ -40,25 +53,70 @@
   pointer-events: none;
 }
 
+/* Hero Content Responsive */
+.hero-content {
+  @apply z-10 relative;
+}
+
+/* Hero Typography - Fluid Responsive */
+.hero h1 {
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.hero p {
+  font-weight: 400;
+  line-height: 1.6;
+}
+
 /* Mobile Hero Adjustments */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .hero {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    min-height: 50vh;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
   }
   
   .hero h1 {
-    font-size: 1.875rem;
-    line-height: 2.25rem;
+    font-size: 1.75rem;
+    line-height: 1.2;
   }
   
   .hero p {
     font-size: 1rem;
-    line-height: 1.5rem;
+    line-height: 1.5;
   }
 }
 
-/* Sticky Filters with Mobile Support */
+/* Search Bar Responsive */
+.hero .join {
+  @apply shadow-2xl;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.hero .input {
+  @apply border-0 focus:ring-0 focus:outline-0;
+  font-size: 1rem;
+}
+
+.hero .btn {
+  @apply border-0;
+}
+
+@media (max-width: 640px) {
+  .hero .input {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 0.75rem 1rem;
+  }
+  
+  .hero .btn {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Sticky Filters - Enhanced */
 .filters-section {
   position: sticky;
   top: 0;
@@ -66,9 +124,10 @@
   backdrop-filter: blur(10px);
   background-color: rgba(255, 255, 255, 0.95);
   border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-/* Mobile Filter Toggle */
+/* Mobile Filter Toggle Animation */
 .mobile-filter-toggle {
   @apply transition-all duration-300 ease-in-out;
 }
@@ -77,38 +136,44 @@
   @apply transition-all duration-300 ease-in-out;
 }
 
-.filters-content.hidden {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
+/* Improved Mobile Filter Animations */
+@media (max-width: 768px) {
+  .filters-content.max-h-0 {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .filters-content.max-h-96 {
+    max-height: 24rem;
+    opacity: 1;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
 }
 
-.filters-content.block {
-  max-height: 500px;
-  opacity: 1;
-}
-
-/* Search Input Improvements */
-.input:focus {
+/* Form Controls - Mobile Optimized */
+.input:focus,
+.select:focus {
   @apply ring-2 ring-primary ring-opacity-50 border-primary;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Mobile Input Adjustments */
 @media (max-width: 768px) {
-  .input {
+  .input,
+  .select {
     font-size: 16px; /* Prevents zoom on iOS */
+    min-height: 2.5rem;
   }
   
-  .select {
-    font-size: 16px;
+  .input-sm,
+  .select-sm {
+    font-size: 14px;
+    min-height: 2.25rem;
   }
-}
-
-/* Filter Controls */
-.select:focus,
-.input:focus {
-  @apply border-primary outline-none ring-2 ring-primary ring-opacity-20;
 }
 
 /* View Toggle Buttons */
@@ -127,6 +192,7 @@
 /* Property Card Responsive Design */
 .property-card {
   @apply overflow-hidden;
+  border-radius: 1rem;
 }
 
 .property-card figure {
@@ -145,7 +211,7 @@
   }
   
   .property-card .card-body {
-    @apply p-3;
+    @apply p-4;
   }
   
   .property-card .card-title {
@@ -173,7 +239,7 @@
 /* Mobile List View Specific */
 @media (max-width: 768px) {
   .card.lg\:card-side .card-body {
-    @apply p-3;
+    @apply p-4;
   }
   
   .card.lg\:card-side .card-title {
@@ -207,16 +273,18 @@
 @media (max-width: 768px) {
   .btn {
     @apply text-sm;
+    min-height: 2.5rem;
   }
   
   .btn-sm {
     @apply text-xs px-3 py-2;
+    min-height: 2.25rem;
   }
 }
 
 /* Empty State */
 .empty-state {
-  @apply text-center py-8;
+  @apply text-center py-12;
 }
 
 .empty-state svg {
@@ -226,7 +294,7 @@
 /* Mobile Empty State */
 @media (max-width: 768px) {
   .empty-state {
-    @apply py-6;
+    @apply py-8;
   }
   
   .empty-state h3 {
@@ -293,6 +361,23 @@
   }
 }
 
+/* Container Responsive Padding */
+.max-w-7xl {
+  @apply px-4;
+}
+
+@media (min-width: 640px) {
+  .max-w-7xl {
+    @apply px-6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .max-w-7xl {
+    @apply px-8;
+  }
+}
+
 /* Touch Improvements for Mobile */
 @media (hover: none) and (pointer: coarse) {
   .property-card:hover {
@@ -351,10 +436,6 @@ html {
 }
 
 .property-card img[loading="lazy"] {
-  opacity: 0;
-}
-
-.property-card img[loading="lazy"].loaded {
   opacity: 1;
 }
 
@@ -362,12 +443,17 @@ html {
 @media (prefers-reduced-motion: reduce) {
   .property-card,
   .btn,
-  .filters-content {
+  .filters-content,
+  .hero::before {
     transition: none;
   }
   
   .property-card:hover {
     transform: none;
+  }
+  
+  .loading-spinner {
+    animation: none;
   }
 }
 
@@ -390,5 +476,29 @@ html {
   .property-card {
     break-inside: avoid;
     margin-bottom: 1rem;
+  }
+}
+
+/* High DPI Display Adjustments */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .hero::before {
+    background-size: 50px 50px;
+  }
+}
+
+/* Landscape Mobile Adjustments */
+@media (max-width: 896px) and (orientation: landscape) {
+  .hero {
+    min-height: 100vh;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero p {
+    font-size: 1.125rem;
   }
 } 

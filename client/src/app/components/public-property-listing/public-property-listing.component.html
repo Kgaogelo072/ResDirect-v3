@@ -1,23 +1,30 @@
 <!-- Hero Section -->
-<div class="hero bg-gradient-to-r from-blue-600 to-purple-600 text-white py-8 md:py-16">
-  <div class="hero-content text-center max-w-4xl mx-auto px-4">
-    <h1 class="text-3xl md:text-5xl font-bold mb-4">Find Your Perfect Home</h1>
-    <p class="text-lg md:text-xl mb-6 md:mb-8">Discover amazing rental properties in your area</p>
-    
-    <!-- Quick Search -->
-    <div class="max-w-2xl mx-auto">
-      <div class="join w-full flex">
-        <input 
-          type="text" 
-          placeholder="Search by location or property name..." 
-          class="input input-bordered join-item flex-1 text-gray-800 text-sm md:text-base"
-          [value]="searchTerm()"
-          (input)="onSearchChange($event)">
-        <button class="btn btn-primary join-item px-3 md:px-6">
-          <svg class="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-        </button>
+<div class="hero bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12 md:py-16 lg:py-20">
+  <div class="hero-content text-center max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="space-y-4 md:space-y-6">
+      <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
+        Find Your Perfect Home
+      </h1>
+      <p class="text-base sm:text-lg md:text-xl lg:text-2xl opacity-90 max-w-2xl mx-auto">
+        Discover amazing rental properties in your area
+      </p>
+      
+      <!-- Quick Search -->
+      <div class="max-w-2xl mx-auto pt-2 md:pt-4">
+        <div class="join w-full shadow-lg">
+          <input 
+            type="text" 
+            placeholder="Search by location or property name..." 
+            class="input input-bordered join-item flex-1 text-gray-800 text-sm md:text-base h-12 md:h-14"
+            [value]="searchTerm()"
+            (input)="onSearchChange($event)">
+          <button class="btn btn-primary join-item px-4 md:px-8 h-12 md:h-14">
+            <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <span class="hidden sm:inline ml-2">Search</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -25,14 +32,19 @@
 
 <!-- Filters Section -->
 <div class="bg-white shadow-sm border-b sticky top-0 z-10 backdrop-blur-md bg-white/95">
-  <div class="max-w-7xl mx-auto px-4 py-4">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
     <!-- Mobile: Collapsible Filters -->
     <div class="md:hidden mb-4">
       <button 
-        class="btn btn-outline btn-sm w-full flex items-center justify-between"
+        class="btn btn-outline btn-sm w-full flex items-center justify-between h-10"
         (click)="toggleMobileFilters()">
-        <span>Filters</span>
-        <svg class="w-4 h-4 transform transition-transform" 
+        <span class="flex items-center">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 2v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"></path>
+          </svg>
+          Filters
+        </span>
+        <svg class="w-4 h-4 transform transition-transform duration-200" 
              [class.rotate-180]="showMobileFilters()"
              fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
@@ -41,16 +53,18 @@
     </div>
 
     <!-- Filters Content -->
-    <div class="filters-content" 
-         [class.hidden]="!showMobileFilters() && isMobile()"
-         [class.block]="showMobileFilters() || !isMobile()">
+    <div class="filters-content overflow-hidden transition-all duration-300 ease-in-out" 
+         [class.max-h-0]="!showMobileFilters() && isMobile()"
+         [class.opacity-0]="!showMobileFilters() && isMobile()"
+         [class.max-h-96]="showMobileFilters() || !isMobile()"
+         [class.opacity-100]="showMobileFilters() || !isMobile()">
       
       <div class="flex flex-col md:flex-row md:flex-wrap gap-3 md:gap-4 md:items-center md:justify-between">
         <!-- Left side filters -->
-        <div class="flex flex-col md:flex-row gap-3 md:gap-4 md:items-center">
+        <div class="flex flex-col sm:flex-row md:flex-row gap-3 md:gap-4 md:items-center flex-1">
           <!-- Bedrooms Filter -->
           <select 
-            class="select select-bordered select-sm w-full md:w-auto"
+            class="select select-bordered select-sm w-full sm:w-auto md:w-auto h-10"
             [value]="selectedBedrooms()"
             (change)="onBedroomFilterChange($event)">
             <option value="">Any Bedrooms</option>
@@ -62,7 +76,7 @@
 
           <!-- Bathrooms Filter -->
           <select 
-            class="select select-bordered select-sm w-full md:w-auto"
+            class="select select-bordered select-sm w-full sm:w-auto md:w-auto h-10"
             [value]="selectedBathrooms()"
             (change)="onBathroomFilterChange($event)">
             <option value="">Any Bathrooms</option>
@@ -76,32 +90,35 @@
             <input 
               type="number" 
               placeholder="Min Price" 
-              class="input input-bordered input-sm w-24 md:w-28 text-xs"
+              class="input input-bordered input-sm w-full sm:w-24 md:w-28 h-10 text-sm"
               [value]="minPrice()"
               (input)="onMinPriceChange($event)">
-            <span class="text-gray-500 text-sm">-</span>
+            <span class="text-gray-500 text-sm px-1">-</span>
             <input 
               type="number" 
               placeholder="Max Price" 
-              class="input input-bordered input-sm w-24 md:w-28 text-xs"
+              class="input input-bordered input-sm w-full sm:w-24 md:w-28 h-10 text-sm"
               [value]="maxPrice()"
               (input)="onMaxPriceChange($event)">
           </div>
         </div>
 
         <!-- Right side controls -->
-        <div class="flex flex-col md:flex-row gap-3 md:gap-4 md:items-center">
+        <div class="flex flex-col sm:flex-row md:flex-row gap-3 md:gap-4 md:items-center">
           <!-- Clear Filters -->
           <button 
-            class="btn btn-ghost btn-sm"
+            class="btn btn-ghost btn-sm h-10"
             (click)="clearFilters()">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
             Clear All
           </button>
 
-          <!-- View Toggle -->
+          <!-- View Toggle - Desktop Only -->
           <div class="join hidden md:flex">
             <button 
-              class="btn join-item btn-sm"
+              class="btn join-item btn-sm h-10"
               [class.btn-active]="viewMode() === 'grid'"
               (click)="viewMode.set('grid')">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,7 +126,7 @@
               </svg>
             </button>
             <button 
-              class="btn join-item btn-sm"
+              class="btn join-item btn-sm h-10"
               [class.btn-active]="viewMode() === 'list'"
               (click)="viewMode.set('list')">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,23 +141,31 @@
 </div>
 
 <!-- Results Summary -->
-<div class="max-w-7xl mx-auto px-4 py-4">
-  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <p class="text-gray-600 text-sm md:text-base">
-      <span class="font-semibold">{{ filteredProperties().length }}</span> properties found
+      <span class="font-semibold">{{ filteredProperties().length }}</span> 
+      <span class="hidden sm:inline">properties found</span>
+      <span class="sm:hidden">results</span>
     </p>
     <!-- Mobile View Toggle -->
     <div class="join md:hidden">
       <button 
-        class="btn join-item btn-sm"
+        class="btn join-item btn-sm flex-1"
         [class.btn-active]="viewMode() === 'grid'"
         (click)="viewMode.set('grid')">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+        </svg>
         Grid
       </button>
       <button 
-        class="btn join-item btn-sm"
+        class="btn join-item btn-sm flex-1"
         [class.btn-active]="viewMode() === 'list'"
         (click)="viewMode.set('list')">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+        </svg>
         List
       </button>
     </div>
@@ -148,7 +173,7 @@
 </div>
 
 <!-- Loading State -->
-<div *ngIf="isLoading()" class="max-w-7xl mx-auto px-4 py-8">
+<div *ngIf="isLoading()" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
   <div class="flex justify-center items-center">
     <div class="loading loading-spinner loading-lg text-primary"></div>
     <span class="ml-3 text-gray-600">Loading properties...</span>
@@ -156,7 +181,7 @@
 </div>
 
 <!-- Properties Grid/List -->
-<div class="max-w-7xl mx-auto px-4 pb-8" *ngIf="!isLoading()">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8" *ngIf="!isLoading()">
   <!-- Empty State -->
   <div *ngIf="filteredProperties().length === 0" class="text-center py-12">
     <div class="empty-state">
@@ -164,7 +189,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
       </svg>
       <h3 class="text-lg md:text-xl font-semibold text-gray-600 mb-2">No properties found</h3>
-      <p class="text-gray-500 mb-4">Try adjusting your search criteria or filters</p>
+      <p class="text-gray-500 mb-4 text-sm md:text-base">Try adjusting your search criteria or filters</p>
       <button class="btn btn-primary btn-sm" (click)="clearFilters()">Clear Filters</button>
     </div>
   </div>
@@ -179,7 +204,8 @@
           [src]="getPropertyImageUrl(property)" 
           [alt]="property.title"
           class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          loading="lazy">
+          loading="lazy"
+          (error)="$event.target.src = getPropertyImageUrl(property)">
         <div class="absolute top-2 right-2 bg-primary text-primary-content px-2 py-1 rounded text-xs font-semibold">
           {{ formatCurrency(property.rentalAmount) }}/month
         </div>
@@ -225,7 +251,8 @@
           [src]="getPropertyImageUrl(property)" 
           [alt]="property.title"
           class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
-          loading="lazy">
+          loading="lazy"
+          (error)="$event.target.src = getPropertyImageUrl(property)">
       </figure>
       <div class="card-body flex-1 p-4 lg:p-6">
         <div class="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-2">
