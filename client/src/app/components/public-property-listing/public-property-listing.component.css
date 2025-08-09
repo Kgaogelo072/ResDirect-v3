@@ -15,7 +15,14 @@
   overflow: hidden;
 }
 
-/* Hero Section Animations */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Hero Section Responsive */
 .hero {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   position: relative;
@@ -33,9 +40,69 @@
   pointer-events: none;
 }
 
-/* Search Input Focus */
+/* Mobile Hero Adjustments */
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  
+  .hero h1 {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  
+  .hero p {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}
+
+/* Sticky Filters with Mobile Support */
+.filters-section {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Mobile Filter Toggle */
+.mobile-filter-toggle {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.filters-content {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.filters-content.hidden {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+}
+
+.filters-content.block {
+  max-height: 500px;
+  opacity: 1;
+}
+
+/* Search Input Improvements */
 .input:focus {
-  @apply ring-2 ring-primary ring-opacity-50;
+  @apply ring-2 ring-primary ring-opacity-50 border-primary;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Mobile Input Adjustments */
+@media (max-width: 768px) {
+  .input {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .select {
+    font-size: 16px;
+  }
 }
 
 /* Filter Controls */
@@ -46,103 +113,199 @@
 
 /* View Toggle Buttons */
 .join .btn {
-  @apply border-gray-300;
+  @apply border-gray-300 transition-all duration-200;
+}
+
+.join .btn:hover {
+  @apply bg-gray-50;
 }
 
 .join .btn.btn-active {
-  @apply bg-primary border-primary text-white;
+  @apply bg-primary text-primary-content border-primary;
 }
 
-/* Property Image Hover Effect */
+/* Property Card Responsive Design */
+.property-card {
+  @apply overflow-hidden;
+}
+
+.property-card figure {
+  @apply relative;
+}
+
 .property-card figure img {
-  @apply transition-transform duration-500 ease-out;
+  @apply w-full h-full object-cover;
+  aspect-ratio: 16/9;
 }
 
-.property-card:hover figure img {
-  @apply scale-110;
+/* Mobile Card Adjustments */
+@media (max-width: 640px) {
+  .property-card {
+    @apply mx-auto max-w-sm;
+  }
+  
+  .property-card .card-body {
+    @apply p-3;
+  }
+  
+  .property-card .card-title {
+    font-size: 1rem;
+    line-height: 1.25rem;
+  }
 }
 
-/* Badge Animations */
-.property-card figure .absolute {
-  @apply transition-all duration-300;
+/* List View Mobile Optimization */
+@media (max-width: 1024px) {
+  .card.lg\:card-side {
+    @apply flex-col;
+  }
+  
+  .card.lg\:card-side figure {
+    @apply w-full;
+    aspect-ratio: 16/9;
+  }
+  
+  .card.lg\:card-side .card-body {
+    @apply p-4;
+  }
 }
 
-.property-card:hover figure .absolute {
-  @apply scale-105;
+/* Mobile List View Specific */
+@media (max-width: 768px) {
+  .card.lg\:card-side .card-body {
+    @apply p-3;
+  }
+  
+  .card.lg\:card-side .card-title {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
 }
 
-/* Loading Animation */
+/* Badge Responsive */
+.badge {
+  @apply text-xs;
+}
+
+@media (max-width: 640px) {
+  .badge {
+    @apply text-xs px-2 py-1;
+  }
+  
+  .badge svg {
+    @apply w-3 h-3;
+  }
+}
+
+/* Button Hover Effects */
+.btn-primary:hover {
+  @apply transform scale-105 shadow-lg;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Mobile Button Adjustments */
+@media (max-width: 768px) {
+  .btn {
+    @apply text-sm;
+  }
+  
+  .btn-sm {
+    @apply text-xs px-3 py-2;
+  }
+}
+
+/* Empty State */
+.empty-state {
+  @apply text-center py-8;
+}
+
+.empty-state svg {
+  @apply mx-auto mb-4 text-gray-300;
+}
+
+/* Mobile Empty State */
+@media (max-width: 768px) {
+  .empty-state {
+    @apply py-6;
+  }
+  
+  .empty-state h3 {
+    font-size: 1.125rem;
+  }
+  
+  .empty-state p {
+    font-size: 0.875rem;
+  }
+}
+
+/* Loading State */
 .loading-spinner {
   animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Back to Top Button */
+.btn-circle {
+  @apply transition-all duration-300 ease-in-out;
 }
 
-/* Empty State Animation */
-.text-center > div:first-child {
-  animation: bounce 2s infinite;
+.btn-circle:hover {
+  @apply transform scale-110;
 }
 
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
+/* Price Display */
+.price-display {
+  @apply font-bold text-primary;
 }
 
-/* Card Hover Glow Effect */
-.property-card .card:hover {
-  @apply shadow-2xl;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(59, 130, 246, 0.1);
-}
-
-/* Price Badge Pulse */
-.property-card:hover .bg-primary {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-/* Smooth Scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .hero-content h1 {
-    @apply text-3xl;
+  .price-display {
+    font-size: 1.125rem;
+  }
+}
+
+/* Grid Responsive Improvements */
+.grid {
+  @apply gap-4;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    @apply gap-6;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    @apply gap-8;
+  }
+}
+
+/* Mobile-First Grid Adjustments */
+@media (max-width: 640px) {
+  .grid-cols-1 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Touch Improvements for Mobile */
+@media (hover: none) and (pointer: coarse) {
+  .property-card:hover {
+    transform: none;
   }
   
-  .hero-content p {
-    @apply text-lg;
+  .btn:hover {
+    transform: none;
   }
   
-  .join {
-    @apply flex-col;
-  }
-  
-  .join-item {
-    @apply w-full;
+  .property-card:active {
+    @apply transform scale-95;
+    transition: transform 0.1s ease-in-out;
   }
 }
 
@@ -153,33 +316,79 @@ html {
   @apply outline-2 outline-offset-2 outline-primary;
 }
 
-/* Grid Layout Responsive */
-@media (min-width: 1536px) {
-  .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3.xl\:grid-cols-4 {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+/* Safe Area Adjustments for Mobile */
+@supports (padding: env(safe-area-inset-left)) {
+  .hero-content,
+  .max-w-7xl {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
   }
 }
 
-/* List View Responsive */
-@media (max-width: 1024px) {
-  .card.lg\:card-side {
-    @apply flex-col;
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile Navigation Improvements */
+@media (max-width: 768px) {
+  .join {
+    @apply w-full;
   }
   
-  .card.lg\:card-side figure {
-    @apply w-full h-48;
+  .join .input {
+    @apply flex-1 min-w-0;
+  }
+  
+  .join .btn {
+    @apply flex-shrink-0;
   }
 }
 
-/* Button Hover Effects */
-.btn-primary:hover {
-  @apply transform scale-105 shadow-lg;
-  transition: all 0.2s ease-in-out;
+/* Image Loading States */
+.property-card img {
+  @apply transition-opacity duration-300;
 }
 
-/* Filters Section Sticky */
-.bg-white.shadow-sm.border-b {
-  @apply sticky top-0 z-10;
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.95);
+.property-card img[loading="lazy"] {
+  opacity: 0;
+}
+
+.property-card img[loading="lazy"].loaded {
+  opacity: 1;
+}
+
+/* Animation Improvements */
+@media (prefers-reduced-motion: reduce) {
+  .property-card,
+  .btn,
+  .filters-content {
+    transition: none;
+  }
+  
+  .property-card:hover {
+    transform: none;
+  }
+}
+
+/* Dark Mode Support (if needed later) */
+@media (prefers-color-scheme: dark) {
+  .filters-section {
+    background-color: rgba(31, 41, 55, 0.95);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .hero,
+  .filters-section,
+  .btn,
+  .back-to-top {
+    display: none !important;
+  }
+  
+  .property-card {
+    break-inside: avoid;
+    margin-bottom: 1rem;
+  }
 } 

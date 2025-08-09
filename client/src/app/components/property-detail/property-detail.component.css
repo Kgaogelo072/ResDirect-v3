@@ -1,28 +1,68 @@
-/* Property Detail Component Styles */
+/* Property Detail Component Mobile-First Styles */
 
-/* Image Gallery */
+/* Base Responsive Layout */
+.property-detail {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Mobile-First Image Gallery */
+.image-gallery {
+  @apply relative overflow-hidden rounded-lg shadow-lg;
+}
+
 .main-image {
-  transition: transform 0.3s ease;
+  @apply transition-transform duration-500 ease-out w-full;
+  aspect-ratio: 16/9;
+  object-fit: cover;
 }
 
 .main-image:hover {
-  transform: scale(1.02);
+  @apply scale-105;
 }
 
-/* Navigation Arrows */
+/* Mobile Image Adjustments */
+@media (max-width: 768px) {
+  .main-image {
+    aspect-ratio: 4/3;
+    height: 250px;
+  }
+}
+
+/* Navigation Arrows - Mobile Optimized */
 .nav-arrow {
-  transition: all 0.3s ease;
+  @apply transition-all duration-300 ease-in-out absolute top-1/2 transform -translate-y-1/2 z-10;
+  @apply bg-black bg-opacity-50 text-white p-2 rounded-full;
   backdrop-filter: blur(4px);
 }
 
 .nav-arrow:hover {
-  transform: scale(1.1);
+  @apply scale-110 bg-opacity-70;
 }
 
-/* Thumbnail Strip */
+.nav-arrow.prev {
+  @apply left-2;
+}
+
+.nav-arrow.next {
+  @apply right-2;
+}
+
+/* Mobile Arrow Adjustments */
+@media (max-width: 768px) {
+  .nav-arrow {
+    @apply p-3;
+  }
+  
+  .nav-arrow svg {
+    @apply w-5 h-5;
+  }
+}
+
+/* Thumbnail Strip - Mobile Responsive */
 .thumbnail-strip {
   scrollbar-width: none;
   -ms-overflow-style: none;
+  @apply flex gap-2 overflow-x-auto pb-2;
 }
 
 .thumbnail-strip::-webkit-scrollbar {
@@ -30,17 +70,160 @@
 }
 
 .thumbnail {
-  transition: all 0.3s ease;
-  cursor: pointer;
+  @apply transition-all duration-300 cursor-pointer flex-shrink-0;
+  @apply w-20 h-16 rounded-lg overflow-hidden;
 }
 
 .thumbnail:hover {
-  transform: scale(1.05);
+  @apply scale-105;
 }
 
-/* Form Animations */
+.thumbnail.active {
+  @apply ring-2 ring-primary ring-offset-2;
+}
+
+/* Mobile Thumbnail Adjustments */
+@media (max-width: 768px) {
+  .thumbnail {
+    @apply w-16 h-12;
+  }
+  
+  .thumbnail-strip {
+    @apply gap-1;
+  }
+}
+
+/* Property Info Layout - Mobile First */
+.property-info {
+  @apply space-y-4;
+}
+
+@media (min-width: 1024px) {
+  .property-info {
+    @apply grid grid-cols-3 gap-8 space-y-0;
+  }
+  
+  .property-details {
+    @apply col-span-2;
+  }
+  
+  .booking-sidebar {
+    @apply col-span-1;
+  }
+}
+
+/* Property Cards */
+.info-card {
+  @apply bg-white rounded-lg shadow-lg transition-all duration-300 p-4;
+}
+
+.info-card:hover {
+  @apply shadow-xl transform -translate-y-1;
+}
+
+/* Mobile Card Adjustments */
+@media (max-width: 768px) {
+  .info-card {
+    @apply p-3 shadow-md;
+  }
+  
+  .info-card:hover {
+    @apply shadow-lg transform-none;
+  }
+}
+
+/* Feature Icons and Lists */
+.feature-icon {
+  @apply transition-colors duration-300 w-5 h-5;
+}
+
+.features-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-3;
+}
+
+.feature-item {
+  @apply flex items-center gap-2 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors;
+}
+
+/* Mobile Feature Adjustments */
+@media (max-width: 640px) {
+  .features-grid {
+    @apply grid-cols-1 gap-2;
+  }
+  
+  .feature-item {
+    @apply text-sm;
+  }
+  
+  .feature-icon {
+    @apply w-4 h-4;
+  }
+}
+
+/* Booking Card - Mobile Responsive */
+.booking-card {
+  @apply bg-white rounded-lg shadow-lg p-6;
+}
+
+@media (min-width: 1024px) {
+  .booking-card {
+    @apply sticky top-6;
+  }
+}
+
+@media (max-width: 1023px) {
+  .booking-card {
+    @apply mt-6;
+  }
+}
+
+/* Mobile Booking Card */
+@media (max-width: 768px) {
+  .booking-card {
+    @apply p-4;
+  }
+}
+
+.price-display {
+  @apply text-3xl font-bold text-primary;
+}
+
+/* Mobile Price Display */
+@media (max-width: 768px) {
+  .price-display {
+    @apply text-2xl;
+  }
+}
+
+/* Form Styles - Mobile Optimized */
 .form-control {
-  transition: all 0.3s ease;
+  @apply transition-all duration-300;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  @apply ring-2 ring-primary ring-opacity-50 border-primary;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input-error,
+.select-error,
+.textarea-error {
+  @apply border-error ring-2 ring-error ring-opacity-20;
+}
+
+/* Mobile Form Adjustments */
+@media (max-width: 768px) {
+  .input,
+  .select,
+  .textarea {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+  
+  .form-control {
+    @apply space-y-3;
+  }
 }
 
 /* Success Alert Animation */
@@ -59,10 +242,45 @@
   }
 }
 
-/* Button Animations */
+/* Button Animations - Touch Friendly */
 .btn:hover {
-  transform: scale(1.05);
-  transition: all 0.2s ease;
+  @apply transform scale-105;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:active {
+  @apply transform scale-95;
+}
+
+/* Mobile Button Adjustments */
+@media (max-width: 768px) {
+  .btn {
+    @apply text-sm py-3 px-4;
+  }
+  
+  .btn-sm {
+    @apply text-xs py-2 px-3;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .btn:hover {
+    transform: none;
+  }
+  
+  .info-card:hover {
+    transform: none;
+  }
+  
+  .thumbnail:hover {
+    transform: none;
+  }
+  
+  .btn:active {
+    @apply transform scale-95;
+    transition: transform 0.1s ease-in-out;
+  }
 }
 
 /* Loading Animation */
@@ -79,18 +297,102 @@
   animation: spin 1s linear infinite;
 }
 
-/* Mobile Responsiveness */
+/* Agent Card - Mobile Responsive */
+.agent-card {
+  @apply bg-gradient-to-br from-white to-gray-50 p-4 rounded-lg;
+}
+
+.avatar {
+  @apply transition-transform duration-300 w-16 h-16 rounded-full;
+}
+
+.avatar:hover {
+  @apply scale-110;
+}
+
+/* Mobile Agent Card */
 @media (max-width: 768px) {
-  .booking-card {
-    position: static;
+  .agent-card {
+    @apply p-3;
   }
   
-  .main-image {
-    height: 16rem;
+  .avatar {
+    @apply w-12 h-12;
+  }
+  
+  .avatar:hover {
+    transform: none;
+  }
+}
+
+/* Back Button - Mobile Optimized */
+.back-btn {
+  @apply transition-all duration-300 fixed top-4 left-4 z-20;
+  @apply bg-white shadow-lg rounded-full p-2;
+}
+
+.back-btn:hover {
+  @apply -translate-x-2 shadow-xl;
+}
+
+/* Mobile Back Button */
+@media (max-width: 768px) {
+  .back-btn {
+    @apply top-2 left-2 p-3;
+  }
+}
+
+/* Image Counter Badge */
+.image-counter {
+  @apply absolute top-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-sm;
+  backdrop-filter: blur(4px);
+}
+
+/* Mobile Image Counter */
+@media (max-width: 768px) {
+  .image-counter {
+    @apply text-xs px-2 py-1;
+  }
+}
+
+/* Share Button */
+.share-btn {
+  @apply transition-all duration-300;
+}
+
+.share-btn:hover {
+  @apply rotate-12 scale-110;
+}
+
+/* Mobile Share Button */
+@media (max-width: 768px) {
+  .share-btn:hover {
+    transform: none;
+  }
+}
+
+/* Form Validation Messages */
+.validation-message {
+  animation: fadeIn 0.3s ease-in-out;
+  @apply text-sm text-error mt-1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 /* Success State Animation */
+.success-state {
+  animation: bounceIn 0.6s ease-out;
+}
+
 @keyframes bounceIn {
   0% {
     transform: scale(0.3);
@@ -108,6 +410,104 @@
   }
 }
 
-.success-state {
-  animation: bounceIn 0.6s ease-out;
+/* Contact Info */
+.contact-info {
+  @apply text-center p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg;
+}
+
+/* Mobile Contact Info */
+@media (max-width: 768px) {
+  .contact-info {
+    @apply p-3 text-sm;
+  }
+}
+
+/* Property Description */
+.property-description {
+  @apply text-gray-700 leading-relaxed;
+}
+
+.property-description p {
+  @apply mb-4;
+}
+
+/* Mobile Description */
+@media (max-width: 768px) {
+  .property-description {
+    @apply text-sm leading-relaxed;
+  }
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1 {
+    @apply text-2xl;
+  }
+  
+  h2 {
+    @apply text-xl;
+  }
+  
+  h3 {
+    @apply text-lg;
+  }
+  
+  .card-title {
+    @apply text-lg;
+  }
+}
+
+/* Safe Area Support */
+@supports (padding: env(safe-area-inset-left)) {
+  .back-btn {
+    left: max(1rem, env(safe-area-inset-left));
+  }
+  
+  .property-detail {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+/* Focus Visible for Accessibility */
+.btn:focus-visible,
+.input:focus-visible,
+.select:focus-visible,
+.textarea:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .main-image,
+  .btn,
+  .info-card,
+  .thumbnail,
+  .avatar {
+    transition: none;
+  }
+  
+  .success-state,
+  .alert-success,
+  .validation-message {
+    animation: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .back-btn,
+  .nav-arrow,
+  .share-btn,
+  .btn {
+    display: none !important;
+  }
+  
+  .property-detail {
+    @apply text-black bg-white;
+  }
+  
+  .booking-card {
+    @apply border border-gray-300;
+  }
 } 

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, signal, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -22,6 +22,11 @@ export class PublicPropertyListingComponent implements OnInit {
   minPrice = signal('');
   maxPrice = signal('');
   viewMode = signal<'grid' | 'list'>('grid');
+  
+  // Mobile-specific signals
+  showMobileFilters = signal(false);
+  isMobileView = signal(false);
+  showBackToTop = signal(false);
   
   // Computed filtered properties
   filteredProperties = computed(() => {
@@ -62,10 +67,31 @@ export class PublicPropertyListingComponent implements OnInit {
     return filtered;
   });
 
-  constructor(private propertyService: PropertyService) {}
+  constructor(private propertyService: PropertyService) {
+    this.checkMobileView();
+  }
 
   ngOnInit(): void {
     this.loadProperties();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(): void {
+    this.checkMobileView();
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll(): void {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    this.showBackToTop.set(scrollTop > 300);
+  }
+
+  private checkMobileView(): void {
+    this.isMobileView.set(window.innerWidth < 768);
+    // Auto-close mobile filters on desktop
+    if (!this.isMobileView()) {
+      this.showMobileFilters.set(false);
+    }
   }
 
   loadProperties(): void {
@@ -81,6 +107,21 @@ export class PublicPropertyListingComponent implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  // Mobile filter toggle
+  toggleMobileFilters(): void {
+    this.showMobileFilters.set(!this.showMobileFilters());
+  }
+
+  // Check if mobile view
+  isMobile(): boolean {
+    return this.isMobileView();
+  }
+
+  // Scroll to top
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   onSearchChange(event: Event): void {
@@ -118,6 +159,10 @@ export class PublicPropertyListingComponent implements OnInit {
     this.selectedBathrooms.set('');
     this.minPrice.set('');
     this.maxPrice.set('');
+    // Close mobile filters after clearing
+    if (this.isMobile()) {
+      this.showMobileFilters.set(false);
+    }
   }
 
   getPropertyImageUrl(property: Property): string {
