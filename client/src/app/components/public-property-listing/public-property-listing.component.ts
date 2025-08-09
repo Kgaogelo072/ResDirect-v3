@@ -176,6 +176,13 @@ export class PublicPropertyListingComponent implements OnInit {
     return this.placeholderImage;
   }
 
+  onImageError(event: Event, property: Property): void {
+    const target = event.target as HTMLImageElement;
+    if (target) {
+      target.src = this.placeholderImage;
+    }
+  }
+
   formatCurrency(amount: number): string {
     return new Intl.NumberFormat('en-ZA', {
       style: 'currency',
