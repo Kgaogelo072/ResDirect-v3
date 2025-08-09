@@ -3,6 +3,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ViewingRequest, ViewingRequestCreate, ViewingStatus } from '../models/viewing-request.model';
 
+export interface GuestViewingRequestCreate {
+  propertyId: number;
+  guestName: string;
+  guestEmail: string;
+  guestPhone: string;
+  viewingDate: string; // ISO date string
+  preferredTime?: string;
+  message?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -37,6 +47,11 @@ export class ViewingRequestService {
     return this.http.post(this.apiUrl, request, {
       headers: this.getAuthHeaders()
     });
+  }
+
+  // Create guest viewing request (no authentication required)
+  createGuestViewingRequest(request: GuestViewingRequestCreate): Observable<any> {
+    return this.http.post(`${this.apiUrl}/guest`, request);
   }
 
   // Get viewing request statistics

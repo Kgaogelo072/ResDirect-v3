@@ -60,6 +60,56 @@ public class ViewingRequestsController : ControllerBase
         return Ok("Viewing request submitted.");
     }
 
+    [HttpPost("guest")]
+    public async Task<IActionResult> CreateGuestRequest(GuestViewingRequestDto dto)
+    {
+        var property = await _context.Properties.Include(p => p.Agent).FirstOrDefaultAsync(p => p.Id == dto.PropertyId);
+
+        if (property == null)
+            return NotFound("Property not found.");
+
+        var request = new ViewingRequest
+        {
+            PropertyId = dto.PropertyId,
+            TenantId = null, // No tenant ID for guest requests
+            GuestName = dto.GuestName,
+            GuestEmail = dto.GuestEmail,
+            GuestPhone = dto.GuestPhone,
+            ViewingDate = dto.PreferredDate,
+            PreferredTime = dto.PreferredTime,
+            Message = dto.Message,
+            Status = PropertyListingAPI.Enums.ViewingStatus.Pending
+        };
+
+        _context.ViewingRequests.Add(request);
+        await _context.SaveChangesAsync();
+
+        // Send email notification to the agent
+        var emailBody = $@"
+            Hi {property.Agent.FullName},<br/>
+            <b>{dto.GuestName}</b> has requested to view your property <b>{property.Title}</b>.<br/>
+            <br/>
+            <b>Guest Details:</b><br/>
+            Name: {dto.GuestName}<br/>
+            Email: {dto.GuestEmail}<br/>
+            Phone: {dto.GuestPhone}<br/>
+            <br/>
+            <b>Viewing Details:</b><br/>
+            Date: {dto.PreferredDate:dd MMM yyyy}<br/>
+            Preferred Time: {dto.PreferredTime ?? "Not specified"}<br/>
+            Message: {dto.Message ?? "No additional message"}<br/>
+            <br/>
+            Please contact the guest directly to confirm the viewing.
+        ";
+        await _emailService.SendEmailAsync(property.Agent.Email, "New Guest Viewing Request", emailBody);
+
+        // Send WhatsApp message to the agent
+        var whatsAppMessage = $"New guest viewing request from {dto.GuestName} ({dto.GuestPhone}) for '{property.Title}' on {dto.PreferredDate:dd MMM yyyy}. Preferred time: {dto.PreferredTime ?? "Not specified"}";
+        await _whatsAppService.SendMessageAsync(property.Agent.PhoneNumber, whatsAppMessage);
+
+        return Ok(new { message = "Viewing request submitted successfully! The agent will contact you soon." });
+    }
+
     [HttpGet("by-agent")]
     [Authorize(Roles = "Agent")]
     public async Task<IActionResult> GetForAgent()

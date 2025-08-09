@@ -1,0 +1,185 @@
+/* Property Card Animations */
+.property-card {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.property-card:hover {
+  @apply transform -translate-y-1;
+}
+
+/* Line Clamp Utilities */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Hero Section Animations */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="1" fill="white" opacity="0.05"/><circle cx="10" cy="60" r="1" fill="white" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  pointer-events: none;
+}
+
+/* Search Input Focus */
+.input:focus {
+  @apply ring-2 ring-primary ring-opacity-50;
+}
+
+/* Filter Controls */
+.select:focus,
+.input:focus {
+  @apply border-primary outline-none ring-2 ring-primary ring-opacity-20;
+}
+
+/* View Toggle Buttons */
+.join .btn {
+  @apply border-gray-300;
+}
+
+.join .btn.btn-active {
+  @apply bg-primary border-primary text-white;
+}
+
+/* Property Image Hover Effect */
+.property-card figure img {
+  @apply transition-transform duration-500 ease-out;
+}
+
+.property-card:hover figure img {
+  @apply scale-110;
+}
+
+/* Badge Animations */
+.property-card figure .absolute {
+  @apply transition-all duration-300;
+}
+
+.property-card:hover figure .absolute {
+  @apply scale-105;
+}
+
+/* Loading Animation */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Empty State Animation */
+.text-center > div:first-child {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* Card Hover Glow Effect */
+.property-card .card:hover {
+  @apply shadow-2xl;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(59, 130, 246, 0.1);
+}
+
+/* Price Badge Pulse */
+.property-card:hover .bg-primary {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    @apply text-3xl;
+  }
+  
+  .hero-content p {
+    @apply text-lg;
+  }
+  
+  .join {
+    @apply flex-col;
+  }
+  
+  .join-item {
+    @apply w-full;
+  }
+}
+
+/* Focus Visible for Accessibility */
+.btn:focus-visible,
+.input:focus-visible,
+.select:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary;
+}
+
+/* Grid Layout Responsive */
+@media (min-width: 1536px) {
+  .grid-cols-1.md\:grid-cols-2.lg\:grid-cols-3.xl\:grid-cols-4 {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* List View Responsive */
+@media (max-width: 1024px) {
+  .card.lg\:card-side {
+    @apply flex-col;
+  }
+  
+  .card.lg\:card-side figure {
+    @apply w-full h-48;
+  }
+}
+
+/* Button Hover Effects */
+.btn-primary:hover {
+  @apply transform scale-105 shadow-lg;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Filters Section Sticky */
+.bg-white.shadow-sm.border-b {
+  @apply sticky top-0 z-10;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+} 

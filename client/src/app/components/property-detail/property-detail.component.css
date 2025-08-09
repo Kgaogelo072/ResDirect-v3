@@ -1,0 +1,113 @@
+/* Property Detail Component Styles */
+
+/* Image Gallery */
+.main-image {
+  transition: transform 0.3s ease;
+}
+
+.main-image:hover {
+  transform: scale(1.02);
+}
+
+/* Navigation Arrows */
+.nav-arrow {
+  transition: all 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+
+.nav-arrow:hover {
+  transform: scale(1.1);
+}
+
+/* Thumbnail Strip */
+.thumbnail-strip {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.thumbnail-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.thumbnail {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.thumbnail:hover {
+  transform: scale(1.05);
+}
+
+/* Form Animations */
+.form-control {
+  transition: all 0.3s ease;
+}
+
+/* Success Alert Animation */
+.alert-success {
+  animation: slideInFromTop 0.5s ease-out;
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Button Animations */
+.btn:hover {
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+/* Loading Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .booking-card {
+    position: static;
+  }
+  
+  .main-image {
+    height: 16rem;
+  }
+}
+
+/* Success State Animation */
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.success-state {
+  animation: bounceIn 0.6s ease-out;
+} 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "rMo97fx3DyY=",
+  "dgSpecHash": "2hQ3QYA9Hhw=",
   "success": true,
   "projectFilePath": "C:\\Users\\fortu\\OneDrive\\Desktop\\Web Development\\ResDirectThirdVersion\\Solution\\PropertyListingAPI\\PropertyListingAPI.csproj",
   "expectedPackageFiles": [
@@ -132,7 +132,7 @@
     "C:\\Users\\fortu\\.nuget\\packages\\system.text.encoding\\4.3.0\\system.text.encoding.4.3.0.nupkg.sha512",
     "C:\\Users\\fortu\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512",
     "C:\\Users\\fortu\\.nuget\\packages\\system.text.encodings.web\\6.0.0\\system.text.encodings.web.6.0.0.nupkg.sha512",
-    "C:\\Users\\fortu\\.nuget\\packages\\system.text.json\\9.0.7\\system.text.json.9.0.7.nupkg.sha512",
+    "C:\\Users\\fortu\\.nuget\\packages\\system.text.json\\9.0.8\\system.text.json.9.0.8.nupkg.sha512",
     "C:\\Users\\fortu\\.nuget\\packages\\system.text.regularexpressions\\4.3.1\\system.text.regularexpressions.4.3.1.nupkg.sha512",
     "C:\\Users\\fortu\\.nuget\\packages\\system.threading\\4.3.0\\system.threading.4.3.0.nupkg.sha512",
     "C:\\Users\\fortu\\.nuget\\packages\\system.threading.channels\\7.0.0\\system.threading.channels.7.0.0.nupkg.sha512",

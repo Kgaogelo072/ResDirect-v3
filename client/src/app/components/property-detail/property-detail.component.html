@@ -1,0 +1,323 @@
+<!-- Loading State -->
+<div *ngIf="isLoading()" class="flex justify-center items-center min-h-screen">
+  <span class="loading loading-spinner loading-lg text-primary"></span>
+</div>
+
+<!-- Property Detail Content -->
+<div *ngIf="!isLoading() && property()" class="min-h-screen bg-gray-50">
+  <!-- Back Navigation -->
+  <div class="bg-white shadow-sm border-b">
+    <div class="max-w-7xl mx-auto px-4 py-4">
+      <button 
+        class="btn btn-ghost btn-sm"
+        (click)="goBack()">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Properties
+      </button>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="grid lg:grid-cols-3 gap-8">
+      <!-- Left Column - Images and Details -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Image Gallery -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+          <!-- Main Image -->
+          <div class="relative h-96 lg:h-[500px] overflow-hidden">
+            <img 
+              [src]="getCurrentImage()" 
+              [alt]="property()?.title"
+              class="w-full h-full object-cover">
+            
+            <!-- Navigation Arrows -->
+            <button 
+              *ngIf="getPropertyImages().length > 1"
+              class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all"
+              (click)="previousImage()">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            
+            <button 
+              *ngIf="getPropertyImages().length > 1"
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75 text-white p-2 rounded-full transition-all"
+              (click)="nextImage()">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <!-- Image Counter -->
+            <div *ngIf="getPropertyImages().length > 1" 
+                 class="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
+              {{ currentImageIndex() + 1 }} / {{ getPropertyImages().length }}
+            </div>
+          </div>
+
+          <!-- Thumbnail Strip -->
+          <div *ngIf="getPropertyImages().length > 1" 
+               class="flex gap-2 p-4 overflow-x-auto">
+            <button 
+              *ngFor="let image of getPropertyImages(); let i = index"
+              class="flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all"
+              [class.border-primary]="i === currentImageIndex()"
+              [class.border-gray-300]="i !== currentImageIndex()"
+              (click)="selectImage(i)">
+              <img 
+                [src]="image" 
+                [alt]="'Property image ' + (i + 1)"
+                class="w-full h-full object-cover">
+            </button>
+          </div>
+        </div>
+
+        <!-- Property Information -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+          <div class="flex justify-between items-start mb-4">
+            <h1 class="text-3xl font-bold text-gray-900">{{ property()?.title }}</h1>
+            <button 
+              class="btn btn-ghost btn-sm"
+              (click)="shareProperty()">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+              </svg>
+            </button>
+          </div>
+
+          <div class="flex items-center gap-2 text-gray-600 mb-4">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
+            <span>{{ property()?.address }}</span>
+          </div>
+
+          <!-- Property Features -->
+          <div class="flex items-center gap-8 mb-6">
+            <div class="flex items-center gap-2 text-gray-700">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+              </svg>
+              <span class="font-semibold">{{ property()?.bedrooms }}</span>
+              <span>Bedrooms</span>
+            </div>
+            
+            <div class="flex items-center gap-2 text-gray-700">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 4a3 3 0 00-3 3v6a3 3 0 003 3h10a3 3 0 003-3V7a3 3 0 00-3-3H5zm-1 9v-1h5v2H5a1 1 0 01-1-1zm7 1h4a1 1 0 001-1v-1h-5v2zm0-4h5V8h-5v2zM9 8H4v2h5V8z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="font-semibold">{{ property()?.bathrooms }}</span>
+              <span>Bathrooms</span>
+            </div>
+
+            <div *ngIf="property()?.images && property()!.images.length > 0" 
+                 class="flex items-center gap-2 text-gray-700">
+              <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="font-semibold">{{ property()!.images.length }}</span>
+              <span>Photos</span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-6">
+            <h3 class="text-xl font-semibold mb-3">About This Property</h3>
+            <p class="text-gray-700 leading-relaxed">{{ property()?.description }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Booking -->
+      <div class="lg:col-span-1">
+        <div class="sticky top-24">
+          <!-- Price and Booking Card -->
+          <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="text-center mb-6">
+              <div class="text-4xl font-bold text-primary mb-2">
+                {{ formatCurrency(property()!.rentalAmount) }}
+              </div>
+              <div class="text-gray-600">per month</div>
+            </div>
+
+            <!-- Success Message -->
+            <div *ngIf="requestSubmitted()" 
+                 class="alert alert-success mb-6">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <div>
+                <h3 class="font-bold">Request Submitted!</h3>
+                <div class="text-xs">The property agent will contact you soon.</div>
+              </div>
+            </div>
+
+            <!-- Request Viewing Button -->
+            <button 
+              *ngIf="!showViewingRequestForm() && !requestSubmitted()"
+              class="btn btn-primary w-full mb-4 text-lg py-3"
+              (click)="toggleViewingRequestForm()">
+              Request Viewing
+            </button>
+
+            <!-- Viewing Request Form -->
+            <form *ngIf="showViewingRequestForm()" 
+                  [formGroup]="viewingRequestForm" 
+                  (ngSubmit)="onSubmitViewingRequest()"
+                  class="space-y-4">
+              
+              <h3 class="text-lg font-semibold mb-4">Request a Viewing</h3>
+
+              <!-- Name -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Full Name *</span>
+                </label>
+                <input 
+                  type="text" 
+                  formControlName="guestName"
+                  placeholder="Enter your full name"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('guestName')">
+                <label *ngIf="isFieldInvalid('guestName')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('guestName') }}</span>
+                </label>
+              </div>
+
+              <!-- Email -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Email Address *</span>
+                </label>
+                <input 
+                  type="email" 
+                  formControlName="guestEmail"
+                  placeholder="Enter your email"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('guestEmail')">
+                <label *ngIf="isFieldInvalid('guestEmail')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('guestEmail') }}</span>
+                </label>
+              </div>
+
+              <!-- Phone -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Phone Number *</span>
+                </label>
+                <input 
+                  type="tel" 
+                  formControlName="guestPhone"
+                  placeholder="Enter your phone number"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('guestPhone')">
+                <label *ngIf="isFieldInvalid('guestPhone')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('guestPhone') }}</span>
+                </label>
+              </div>
+
+              <!-- Preferred Date -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Preferred Date *</span>
+                </label>
+                <input 
+                  type="date" 
+                  formControlName="preferredDate"
+                  [min]="getMinDate()"
+                  class="input input-bordered"
+                  [class.input-error]="isFieldInvalid('preferredDate')">
+                <label *ngIf="isFieldInvalid('preferredDate')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('preferredDate') }}</span>
+                </label>
+              </div>
+
+              <!-- Preferred Time -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Preferred Time *</span>
+                </label>
+                <select 
+                  formControlName="preferredTime"
+                  class="select select-bordered"
+                  [class.select-error]="isFieldInvalid('preferredTime')">
+                  <option value="">Select a time</option>
+                  <option value="09:00">9:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="12:00">12:00 PM</option>
+                  <option value="13:00">1:00 PM</option>
+                  <option value="14:00">2:00 PM</option>
+                  <option value="15:00">3:00 PM</option>
+                  <option value="16:00">4:00 PM</option>
+                  <option value="17:00">5:00 PM</option>
+                </select>
+                <label *ngIf="isFieldInvalid('preferredTime')" class="label">
+                  <span class="label-text-alt text-error">{{ getFieldError('preferredTime') }}</span>
+                </label>
+              </div>
+
+              <!-- Message -->
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">Additional Message</span>
+                </label>
+                <textarea 
+                  formControlName="message"
+                  placeholder="Any specific requirements or questions?"
+                  class="textarea textarea-bordered h-24"
+                  rows="3"></textarea>
+              </div>
+
+              <!-- Form Actions -->
+              <div class="flex gap-3 pt-4">
+                <button 
+                  type="button"
+                  class="btn btn-ghost flex-1"
+                  (click)="toggleViewingRequestForm()">
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  class="btn btn-primary flex-1"
+                  [disabled]="isSubmittingRequest()">
+                  <span *ngIf="isSubmittingRequest()" class="loading loading-spinner loading-sm"></span>
+                  {{ isSubmittingRequest() ? 'Submitting...' : 'Submit Request' }}
+                </button>
+              </div>
+            </form>
+
+            <!-- Contact Info -->
+            <div class="text-center text-sm text-gray-600 mt-4">
+              <p>No registration required!</p>
+              <p>The agent will contact you directly</p>
+            </div>
+          </div>
+
+          <!-- Agent Info Card (Placeholder) -->
+          <div class="bg-white rounded-lg shadow-lg p-6">
+            <h3 class="text-lg font-semibold mb-3">Listed by Agent</h3>
+            <div class="flex items-center gap-3 mb-4">
+              <div class="avatar placeholder">
+                <div class="bg-neutral-focus text-neutral-content rounded-full w-12">
+                  <span class="text-xl">A</span>
+                </div>
+              </div>
+              <div>
+                <div class="font-semibold">Property Agent</div>
+                <div class="text-sm text-gray-600">Licensed Real Estate Agent</div>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600">
+              Professional property management with years of experience in the local market.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
